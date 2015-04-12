@@ -1,4 +1,4 @@
-# node-dijkstra
+# node-dijkstra [![Build Status](https://travis-ci.org/albertorestifo/node-dijkstra.svg)](https://travis-ci.org/albertorestifo/node-dijkstra)
 
 A NodeJS (or io.js) implementation of the Dijkstra's shortest path problem. Originally forked from [andrewhayward/dijkstra][1].
 
