@@ -11,6 +11,7 @@ assign(Graph.prototype, {
   // add a vertex to the graph
   addVertex: function(name, edges) {
     this.vertices[name] = edges;
+    return this;
   },
 
   // compute the path
