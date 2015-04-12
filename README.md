@@ -13,15 +13,15 @@ npm install node-dijkstra --save
 ## Usage
 
 ```js
-var map = {a:{b:3,c:1},b:{a:2,c:1},c:{a:4,b:1}},
-    graph = new Graph(map);
+var g = new Graph();
 
-graph.findShortestPath('a', 'b');      // => ['a', 'c', 'b']
-graph.findShortestPath('a', 'c');      // => ['a', 'c']
-graph.findShortestPath('b', 'a');      // => ['b', 'a']
-graph.findShortestPath('b', 'c', 'b'); // => ['b', 'c', 'b']
-graph.findShortestPath('c', 'a', 'b'); // => ['c', 'b', 'a', 'c', 'b']
-graph.findShortestPath('c', 'b', 'a'); // => ['c', 'b', 'a']
+g.addVertex('A', {B: 7, C: 8});
+g.addVertex('B', {A: 7, F: 2});
+g.addVertex('C', {A: 8, F: 6, G: 4});
+g.addVertex('D', {F: 8});
+g.addVertex('E', {H: 1});
+g.addVertex('F', {B: 2, C: 6, D: 8, G: 9, H: 3});
+g.addVertex('G', {C: 4, F: 9});
 ```
 
 ## Testing
