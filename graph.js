@@ -47,7 +47,7 @@ assign(Graph.prototype, {
         continue;
       }
 
-      for (neighbor in this.vertices[smallest]) {
+      for (var neighbor in this.vertices[smallest]) {
         alt = this.distances[smallest] + this.vertices[smallest][neighbor];
 
         if (alt < this.distances[neighbor]) {
