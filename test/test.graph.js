@@ -59,6 +59,19 @@ describe('Graph', function() {
       expect(path).to.deep.equal(['A', 'B', 'C', 'D']);
     });
 
+    it('should return the shortest without start and finish', function() {
+      var graph = new Graph({
+        A:{B:1},
+        B:{A:1, C:2, D: 4},
+        C:{B:2, D:1},
+        D:{C:1, B:4}
+      }); // Shortest path A-D: A-B-C-D
+
+      var path = graph.shortestPath('A', 'D', {trim: true});
+      expect(path).to.be.an('array');
+      expect(path).to.deep.equal(['B', 'C']);
+    });
+
   });  // shortestPath
 
 });

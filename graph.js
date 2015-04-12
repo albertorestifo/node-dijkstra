@@ -14,7 +14,9 @@ assign(Graph.prototype, {
   },
 
   // compute the path
-  shortestPath: function(start, finish) {
+  shortestPath: function(start, finish, options) {
+    options = options || {};
+
     this.nodes = new PriorityQueue();
     this.distances = {};
     this.previous = {};
@@ -54,6 +56,11 @@ assign(Graph.prototype, {
           this.nodes.enqueue(alt, neighbor);
         }
       }
+    }
+
+    if (options.trim) {
+      path.shift()
+      return path.reverse();
     }
 
     return path.concat([start]).reverse();
