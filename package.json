@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A NodeJS implementation of Dijkstra's algorithm",
   "author": "Alberto Restifo <alberto.restifo@gmail.com>",
-  "main": "dijkstra.js",
+  "main": "graph.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/albertorestifo/node-dijkstra"
