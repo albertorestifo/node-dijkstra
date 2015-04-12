@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/albertorestifo/node-dijkstra.svg)](https://travis-ci.org/albertorestifo/node-dijkstra) [![Coverage Status](https://coveralls.io/repos/albertorestifo/node-dijkstra/badge.svg)](https://coveralls.io/r/albertorestifo/node-dijkstra) [![Coverage Status](https://coveralls.io/repos/albertorestifo/node-dijkstra/badge.svg)](https://coveralls.io/r/albertorestifo/node-dijkstra)
+[![Build Status](https://travis-ci.org/albertorestifo/node-dijkstra.svg)](https://travis-ci.org/albertorestifo/node-dijkstra) [![Coverage Status](https://coveralls.io/repos/albertorestifo/node-dijkstra/badge.svg)](https://coveralls.io/r/albertorestifo/node-dijkstra) [![Dependency Status](https://gemnasium.com/albertorestifo/node-dijkstra.svg)](https://gemnasium.com/albertorestifo/node-dijkstra)
 
 # node-dijkstra
 
