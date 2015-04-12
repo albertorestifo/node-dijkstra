@@ -1,0 +1,22 @@
+{
+  "node": true,
+  "asi": true,
+  "bitwise": true,
+  "freeze": true,
+  "immed": true,
+  "newcap": true,
+  "nonbsp": true,
+  "nonew": true,
+  "quotmark": "single",
+  "undef": true,
+  "unused": true,
+  "es5": true,
+  "globals": {
+    "describe": false,
+    "it": false,
+    "before": false,
+    "beforeEach": false,
+    "after": false,
+    "afterEach": false,
+  }
+}
