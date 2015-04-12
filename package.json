@@ -1,0 +1,24 @@
+{
+  "name": "node-dijkstra",
+  "version": "0.1.0",
+  "description": "A NodeJS implementation of Dijkstra's algorithm",
+  "author": "Alberto Restifo <alberto.restifo@gmail.com>",
+  "main": "dijkstra.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/albertorestifo/node-dijkstra"
+  },
+  "bugs": {
+    "url": "https://github.com/albertorestifo/node-dijkstra/issues"
+  },
+  "keywords": [
+    "dijkstra",
+    "shortest path"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^2.2.0",
+    "istanbul": "^0.3.13",
+    "mocha": "^2.2.4"
+  }
+}
