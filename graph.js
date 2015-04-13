@@ -59,12 +59,18 @@ assign(Graph.prototype, {
       }
     }
 
+    if (path.length < 1) { return null; }
+
     if (options.trim) {
       path.shift()
+      // `path` is generated in reverse order
+      if (options.reverse) { return path; }
       return path.reverse();
     }
 
-    return path.concat([start]).reverse();
+    path = path.concat([start]);
+    if (options.reverse) { return path; }
+    return path.reverse();
   },
 
   // set the starting point to 0 and all the others to infinite

@@ -39,7 +39,8 @@ describe('Graph', function() {
     it('should return an array', function() {
       var graph = new Graph({
         A:{B:1, C:2},
-        B:{A:1, C:2}
+        B:{A:1, C:2},
+        C:{B:2, A:1}
       });
 
       var path = graph.shortestPath('A', 'C');
@@ -70,6 +71,44 @@ describe('Graph', function() {
       var path = graph.shortestPath('A', 'D', {trim: true});
       expect(path).to.be.an('array');
       expect(path).to.deep.equal(['B', 'C']);
+    });
+
+    it('should return the reversed path', function() {
+      var graph = new Graph({
+        A:{B:1},
+        B:{A:1, C:2, D: 4},
+        C:{B:2, D:1},
+        D:{C:1, B:4}
+      }); // Shortest path A-D: A-B-C-D
+
+      var path = graph.shortestPath('A', 'D', {reverse: true});
+      expect(path).to.be.an('array');
+      expect(path).to.deep.equal(['A', 'B', 'C', 'D'].reverse());
+    });
+
+    it('should return the reversed triemmed path', function() {
+      var graph = new Graph({
+        A:{B:1},
+        B:{A:1, C:2, D: 4},
+        C:{B:2, D:1},
+        D:{C:1, B:4}
+      }); // Shortest path A-D: A-B-C-D
+
+      var path = graph.shortestPath('A', 'D', {reverse: true, trim: true});
+      expect(path).to.be.an('array');
+      expect(path).to.deep.equal(['B', 'C'].reverse());
+    });
+
+    it('should return null when no path can be created', function() {
+      var graph = new Graph({
+        A:{B:1},
+        B:{A:1, C:2, D: 4},
+        C:{B:2, D:1},
+        D:{C:1, B:4}
+      }); // Shortest path A-D: A-B-C-D
+
+      var path = graph.shortestPath('A', 'E');
+      expect(path).to.equal(null);
     });
 
   });  // shortestPath

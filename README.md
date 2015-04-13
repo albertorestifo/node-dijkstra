@@ -44,6 +44,8 @@ var g = new Graph({
 })
 ```
 
+
+
 ### `Graph.prototype.addVertex(name, edges)`
 
 **Parameters:**
@@ -62,6 +64,8 @@ g.addVertex('A', {B:1});
 g.addVertex('B', {A:1}).addVertex('C', {A:3});
 ```
 
+
+
 ### `Graph.prototype.shortestPath(start, finish [, options])`
 
 **Parameters:**
@@ -72,11 +76,12 @@ g.addVertex('B', {A:1}).addVertex('C', {A:3});
 
 **Returns:**
 
-`Array` containing the crossed vertices names, in order from the starting vertex to the finish vertex, by default it includes the start and finish vertices as well.
+`Array` containing the crossed vertices names, in order from the starting vertex to the finish vertex, by default it includes the start and finish vertices as well. Returns `null` if no path can be found between the start and finish vertices.
 
 **Options:**
 
 - `trim` (default: `false`): if set to true, it won't include the starting and finish vertices in the returned path.
+- `reverse` (default: `false`): if set to true, it will return the array vertices in reversed order
 
 ```js
 var Graph = require('node-dijkstras');
@@ -90,8 +95,17 @@ g.addVertex('D', {C:1, B:4});
 
 g.shortestPath('A', 'D'); // => ['A', 'B', 'C', 'D']
 
-// or trimmed
+// trimmed
 g.shortestPath('A', 'D', {trim: true}); // => [B', 'C']
+
+// reversed
+g.shortestPath('A', 'D', {reverse: true}); // => ['D', 'C', 'B', 'A']
+
+// reversed and trimmed
+g.shortestPath('A', 'D', {
+  reverse: true,
+  trim: true
+}); // => ['C', 'B']
 ```
 
 
