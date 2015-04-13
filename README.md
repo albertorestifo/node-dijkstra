@@ -44,7 +44,7 @@ var g = new Graph({
 })
 ```
 
-### `addVertex(name, edges)`
+### `Graph.prototype.addVertex(name, edges)`
 
 **Parameters:**
 
@@ -62,7 +62,7 @@ g.addVertex('A', {B:1});
 g.addVertex('B', {A:1}).addVertex('C', {A:3});
 ```
 
-### `shortestPath(start, finish [, options])`
+### `Graph.prototype.shortestPath(start, finish [, options])`
 
 **Parameters:**
 
