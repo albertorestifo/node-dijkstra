@@ -131,9 +131,9 @@ Returns `null` if no path can be found between the start and finish vertices.
 By default, the array includes the origin and destination vertices. Setting `options.trim` to true will remove those.
 
 ```js
-var Graph = require('node-dijkstras')
+const Graph = require('node-dijkstras')
 
-var route = new Graph()
+const route = new Graph()
 
 route.addVertex('A', { B: 1 })
 route.addVertex('B', { A: 1, C: 2, D: 4 })
