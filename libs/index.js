@@ -46,6 +46,8 @@ class Graph {
     if (!Object.isObject(edges)) throw new TypeError('edges must be an object')
 
     this.vertices.set(name, edges)
+
+    return this
   }
 
   /**
