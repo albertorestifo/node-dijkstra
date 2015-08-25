@@ -6,7 +6,7 @@ const Queue = require('priorityqueuejs')
  * Comparator function used for the `priorityqueuejs` library
  */
 function comparator (a, b) {
-  return a.cost - b.cost
+  return b.cost - a.cost
 }
 
 class Graph {
@@ -20,17 +20,21 @@ class Graph {
     this.vertices = new Map()
 
     if (vertices) {
-      if (!Object.isObject(vertices)) {
+      if (typeof vertices !== 'object') {
         throw new TypeError('vertices must be an object')
       }
 
       // Populate the map with passed vertices
-      for (vertex of vertices) {
-        if (!Object.isObject(vertices[vertex])) {
-          throw new TypeError('vertex must be an object')
-        }
+      for (let vertex in vertices) {
+        if (vertices.hasOwnProperty(vertex)) {
 
-        this.vertices.set(vertex, vertices[vertex])
+          if (typeof vertices[vertex] !== 'object') {
+            throw new TypeError('vertex must be an object')
+          }
+
+          this.vertices.set(vertex, vertices[vertex])
+
+        }
       }
     }
   }
@@ -43,7 +47,7 @@ class Graph {
    */
   addVertex (name, edges) {
     if (typeof name !== 'string') throw new TypeError('name must be a string')
-    if (!Object.isObject(edges)) throw new TypeError('edges must be an object')
+    if (typeof edges !== 'object') throw new TypeError('edges must be an object')
 
     this.vertices.set(name, edges)
 
@@ -63,10 +67,6 @@ class Graph {
    * @return {array} Computed path between the vertices
    */
   path (origin, destination, options) {
-    if (typeof orgin !== 'string' || typeof destination !== 'string') {
-      throw new TypeError('origin and destination must be strings')
-    }
-
     options = options || {}
 
     let queue = new Queue(comparator)
@@ -75,7 +75,7 @@ class Graph {
 
     // Set the initial cost for the verticies, as of the Dijkstra algorithm
     // the starting point initial cost is 0 and all the others to Infinity
-    this.nodes.forEach(function (edges, vertex) {
+    this.vertices.forEach(function (edges, vertex) {
       const cost = vertex === origin ? 0 : Infinity
 
       distances.set(vertex, cost)
@@ -85,43 +85,39 @@ class Graph {
 
     let path = []
 
-    // Loop every node in the queue
+    // Visit every node in the queque
     while (!queue.isEmpty()) {
+      // Get the "closest" (least expensive) node we have yet to visit
       let closest = queue.deq().vertex
 
-      // When the closest vertex is the destination, we can walk back
-      // the previous vertices to compose the path and exit the loop
       if (closest === destination) {
         while (previous.has(closest)) {
           path.push(closest)
-
           closest = previous.get(closest)
         }
 
         break
       }
 
-      // Skip this iteration when the closest still has a cost of Infinity
-      if (this.distances.get(closest) === Infinity) {
-        continue;
-      }
-
       // Compute new cost for connecting vertices
       const edges = this.vertices.get(closest)
-      for (vertex of edges) {
-        const cost = distances.get(closest) + edges[vertex]
+      for (let vertex in edges) {
+        if (edges.hasOwnProperty(vertex)) {
+          const cost = distances.get(closest) + edges[vertex]
 
-        if (cost < distances.get(vertex)) {
-          distances.set(vertex)
-          previous.set(vertex, closest)
+          if (cost < distances.get(vertex)) {
+            distances.set(vertex, cost)
+            previous.set(vertex, closest)
 
-          queue.enq({ cost , vertex })
+            queue.enq({ cost, vertex })
+          }
+
         }
       }
     } // while loop
 
     // Return null when no path can be found
-    if (path.length) return null
+    if (!path.length) return null
 
     // From now on, keep in mind that `path` is populated in reverse order,
     // from destination to origin
@@ -152,13 +148,4 @@ class Graph {
 
 }
 
-
-var PriorityQueue = require('./libs/queue');
-
-// costruct
-var Graph = function(vertices) {
-  // you can either pass a verticies object or add every
-  this.vertices = vertices || {};
-}
-
-module.exports = Graph;
+module.exports = Graph
