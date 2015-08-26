@@ -69,19 +69,25 @@ class Graph {
   path (origin, destination, options) {
     options = options || {}
 
+    // If we have no vertices set, we return null
+    if (!this.vertices.size) return null
+
     let queue = new Queue(comparator)
-    let distances = new Map()
-    let previous = new Map()
+    let costs = new Map()
 
     // Set the initial cost for the verticies, as of the Dijkstra algorithm
     // the starting point initial cost is 0 and all the others to Infinity
     this.vertices.forEach(function (edges, vertex) {
       const cost = vertex === origin ? 0 : Infinity
 
-      distances.set(vertex, cost)
-      queue.enq({ cost, vertex })
+      costs.set(vertex, cost)
 
+      // Enqueue the vertex with it's cost
+      queue.enq({ cost, vertex })
     }, this)
+
+    // Holds the route we took to visit the vertex
+    let previous = new Map()
 
     let path = []
 
@@ -90,6 +96,8 @@ class Graph {
       // Get the "closest" (least expensive) node we have yet to visit
       let closest = queue.deq().vertex
 
+      // When the least expensive vertex to visit is our destination, the least
+      // expensive path has been found
       if (closest === destination) {
         while (previous.has(closest)) {
           path.push(closest)
@@ -99,14 +107,16 @@ class Graph {
         break
       }
 
-      // Compute new cost for connecting vertices
+      // Compute the new cost for the connected vertices
       const edges = this.vertices.get(closest)
       for (let vertex in edges) {
         if (edges.hasOwnProperty(vertex)) {
-          const cost = distances.get(closest) + edges[vertex]
+          const cost = costs.get(closest) + edges[vertex]
 
-          if (cost < distances.get(vertex)) {
-            distances.set(vertex, cost)
+          // When the new cost is lower than the currently set cost, update
+          // the cost and set this vertex as previous
+          if (cost < costs.get(vertex)) {
+            costs.set(vertex, cost)
             previous.set(vertex, closest)
 
             queue.enq({ cost, vertex })

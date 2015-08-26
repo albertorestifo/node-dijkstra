@@ -3,7 +3,8 @@
 
 require('must')
 
-// const sinon = require('sinon')
+const demand = require('must')
+const sinon = require('sinon')
 
 const Graph = require('../libs/')
 
@@ -46,6 +47,18 @@ describe('Graph', function () {
 
       graph.addVertex('a', { b: 10, c: 20 }).must.be.instanceOf(Graph)
     })
+
+    it('requires name to be a string', function () {
+      let graph = new Graph()
+
+      demand(graph.addVertex.bind(graph, 2, { b: 10, c: 20 })).throw(TypeError)
+    })
+
+    it('requires edges to be an object', function () {
+      let graph = new Graph()
+
+      demand(graph.addVertex.bind(graph, 'ok', 10)).throw(TypeError)
+    })
   })
 
   describe('#path()', function () {
@@ -87,23 +100,51 @@ describe('Graph', function () {
       path.must.eql([ 'b' ])
     })
 
-    it('works with a more complicated graph', function () {
-      // solution 1-6: 1, 3, 5, 6
-      const route = new Graph({
-        '1': { '2': 10, '3': 20, '4': 30 },
-        '2': { '1': 10, '3': 20 },
-        '3': { '2': 20, '1': 20, '5': 10 },
-        '4': { '1': 30, '5': 10 },
-        '5': { '4': 10, '3': 10, '6': 20, '7': 10 },
-        '6': { '5': 20, '7': 20 },
-        '7': { '5': 10, '6': 20 }
-      })
+    it('returns null when no path is found', function () {
+      const route = new Graph(vertices)
 
-      const path = route.path('1', '6')
+      const path = route.path('a', 'd')
 
-      path.must.eql([ '1', '3', '5', '6' ])
+      demand(path).be.null()
     })
 
+    it('returns null when no vertices are defined', function () {
+      const route = new Graph()
+
+      const path = route.path('a', 'd')
+
+      demand(path).be.null()
+    })
+
+    it('works with a more complicated graph', function () {
+      const route = new Graph({
+        a: { b: 7, c: 9, f: 14 },
+        b: { c: 10, d: 15 },
+        c: { d: 11, f: 2 },
+        d: { e: 6 },
+        e: { f: 9 }
+      })
+
+      const path = route.path('a', 'e')
+
+      path.must.eql([ 'a', 'c', 'd', 'e' ])
+    })
+
+  })
+
+  describe('#shortestPath()', function () {
+    it('is an alias of path', function () {
+      var route = new Graph({
+        a: { b: 20, c: 80 },
+        b: { a: 20, c: 20 },
+        c: { a: 80, b: 20 }
+      })
+
+      sinon.spy(route, 'path')
+
+      route.shortestPath('a', 'c')
+      sinon.assert.calledOnce(route.path)
+    })
   })
 
 })
