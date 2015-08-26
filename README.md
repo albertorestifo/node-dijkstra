@@ -4,10 +4,6 @@
 
 > Fast JavaScript implementation of the  Dijkstra's shortest path problem for iojs and NodeJS
 
-**NodeJS users beware:** since version `2` of this plugin uses some incompatible ES6 faetures. The version `1.1.3` is stable and safe to use on NodeJS.
-
-Install it with `npm install node-dijkstra@1.1.3 --save`
-
 ## Installation
 
 Since version 2 this plugin uses some ES6 features. On iojs you can install the lastest version:
