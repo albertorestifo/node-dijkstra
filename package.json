@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "standard && mocha -b -R spec",
-    "coverage": "standard && instanbul cover _mocha -- --ui bdd -R spec -t 5000 && cat ./coverage/lcov.info"
+    "coverage": "standard && istanbul cover _mocha -- --ui bdd -R spec -t 5000"
   },
   "bugs": {
     "url": "https://github.com/albertorestifo/node-dijkstra/issues"
@@ -22,6 +22,7 @@
   "license": "MIT",
   "devDependencies": {
     "babel-eslint": "^4.0.10",
+    "codecov.io": "^0.1.6",
     "istanbul": "^0.3.13",
     "mocha": "^2.2.4",
     "must": "^0.12.0",
