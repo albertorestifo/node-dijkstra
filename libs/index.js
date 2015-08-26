@@ -1,55 +1,32 @@
 'use strict'
 
-const Queue = require('priorityqueuejs')
-
-/**
- * Comparator function used for the `priorityqueuejs` library
- */
-function comparator (a, b) {
-  return b.cost - a.cost
-}
+const Queue = require('./PriorityQueue')
+const populateMap = require('./populateMap')
 
 class Graph {
 
   /**
    * Construct the base verticies map
    *
-   * @param {object} [vertices] - Initialize the graph with verticies data
+   * @param {object} [graph] - Initialize the graph with nodes
    */
-  constructor (vertices) {
-    this.vertices = new Map()
+  constructor (graph) {
+    this.graph = new Map()
 
-    if (vertices) {
-      if (typeof vertices !== 'object') {
-        throw new TypeError('vertices must be an object')
-      }
-
-      // Populate the map with passed vertices
-      for (let vertex in vertices) {
-        if (vertices.hasOwnProperty(vertex)) {
-
-          if (typeof vertices[vertex] !== 'object') {
-            throw new TypeError('vertex must be an object')
-          }
-
-          this.vertices.set(vertex, vertices[vertex])
-
-        }
-      }
-    }
+    if (graph) populateMap(this.graph, graph, Object.keys(graph))
   }
 
   /**
    * Add a vertex to the vertices map
    *
-   * @param {string} name  - Name of the vertex
-   * @param {object} edges - Edges of the vertex with name and cost
+   * @param {string} name      - Name of the vertex
+   * @param {object} neighbors - Neighbouring nodes
    */
-  addVertex (name, edges) {
-    if (typeof name !== 'string') throw new TypeError('name must be a string')
-    if (typeof edges !== 'object') throw new TypeError('edges must be an object')
+  addVertex (name, neighbors) {
+    let _neighbors = new Map()
 
-    this.vertices.set(name, edges)
+    populateMap(_neighbors, neighbors, Object.keys(neighbors))
+    this.graph.set(name, _neighbors)
 
     return this
   }
@@ -57,74 +34,64 @@ class Graph {
   /**
    * Compute the shortest path between the specified vertices
    *
-   * @param {string}  origin       - Origin vetex
-   * @param {string}  destination  - Destination vertex
+   * @param {string}  start        - Origin node
+   * @param {string}  goal         - Destination node
    * @param {object}  [options]    - Options
    *
    * @param {boolean} [options.trim]    - Exclude the origin and destination vertices from the result
    * @param {boolean} [options.reverse] - Return the path in reversed order
    *
-   * @return {array} Computed path between the vertices
+   * @return {array} Computed path between the nodes
    */
-  path (origin, destination, options) {
+  path (start, goal, options) {
     options = options || {}
 
     // If we have no vertices set, we return null
-    if (!this.vertices.size) return null
+    if (!this.graph.size) return null
 
-    let queue = new Queue(comparator)
-    let costs = new Map()
-
-    // Set the initial cost for the verticies, as of the Dijkstra algorithm
-    // the starting point initial cost is 0 and all the others to Infinity
-    this.vertices.forEach(function (edges, vertex) {
-      const cost = vertex === origin ? 0 : Infinity
-
-      costs.set(vertex, cost)
-
-      // Enqueue the vertex with it's cost
-      queue.enq({ cost, vertex })
-    }, this)
-
-    // Holds the route we took to visit the vertex
+    // Use Uniform-cost Search for better performances
+    let frontier = new Queue()
+    let explored = new Set()
     let previous = new Map()
-
     let path = []
 
-    // Visit every node in the queque
-    while (!queue.isEmpty()) {
-      // Get the "closest" (least expensive) node we have yet to visit
-      let closest = queue.deq().vertex
+    frontier.set(start, 0)
 
-      // When the least expensive vertex to visit is our destination, the least
-      // expensive path has been found
-      if (closest === destination) {
-        while (previous.has(closest)) {
-          path.push(closest)
-          closest = previous.get(closest)
+    while (!frontier.isEmpty()) {
+      let node = frontier.next()
+
+      if (node.key === goal) {
+        // RESULT
+        let _nodeKey = node.key
+        while (previous.has(_nodeKey)) {
+          path.push(_nodeKey)
+          _nodeKey = previous.get(_nodeKey)
         }
 
         break
       }
 
-      // Compute the new cost for the connected vertices
-      const edges = this.vertices.get(closest)
-      for (let vertex in edges) {
-        if (edges.hasOwnProperty(vertex)) {
-          const cost = costs.get(closest) + edges[vertex]
+      explored.add(node.key)
 
-          // When the new cost is lower than the currently set cost, update
-          // the cost and set this vertex as previous
-          if (cost < costs.get(vertex)) {
-            costs.set(vertex, cost)
-            previous.set(vertex, closest)
+      let neighbors = this.graph.get(node.key) || new Map()
+      neighbors.forEach(function (_cost, _node) {
+        // Skip the neighbor if it was already explored
+        if (explored.has(_node)) return false
 
-            queue.enq({ cost, vertex })
-          }
-
+        if (!frontier.has(_node)) {
+          previous.set(_node, node.key)
+          return frontier.set(_node, node.priority + _cost)
         }
-      }
-    } // while loop
+
+        var frontierPriority = frontier.get(_node).priority
+        var nodeCost = node.priority + _cost
+
+        if (nodeCost < frontierPriority) {
+          previous.set(_node, node.key)
+          frontier.set(_node, nodeCost)
+        }
+      })
+    }
 
     // Return null when no path can be found
     if (!path.length) return null
@@ -138,7 +105,7 @@ class Graph {
       path.shift()
     } else {
       // Add the origin waypoint at the beginning of the array
-      path = path.concat([ origin ])
+      path = path.concat([ start ])
     }
 
     // Reverse the path if we don't want it reversed

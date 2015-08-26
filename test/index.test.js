@@ -19,45 +19,36 @@ describe('Graph', function () {
     })
 
     it('populates the vertices with the passed point', function () {
-      var graph = new Graph({
+      var route = new Graph({
         a: { b: 1, c: 2 }
       })
 
-      graph.vertices.must.be.instanceOf(Map)
-      graph.vertices.size.must.equal(1)
-      graph.vertices.get('a').must.be.object()
+      route.graph.must.be.instanceOf(Map)
+      route.graph.size.must.equal(1)
+      var a = route.graph.get('a')
+
+      a.must.be.instanceOf(Map)
     })
 
   })
 
   describe('#addVertex()', function () {
     it('adds a vertex', function () {
-      let graph = new Graph()
+      let route = new Graph()
 
-      graph.addVertex('a', { b: 10, c: 20 })
+      route.addVertex('a', { b: 10, c: 20 })
 
-      let vertex = graph.vertices.get('a')
+      let node = route.graph.get('a')
 
-      vertex.must.be.object()
-      vertex.must.have.keys([ 'b', 'c' ])
+      node.must.be.instanceOf(Map)
+      node.get('b').must.equal(10)
+      node.get('c').must.equal(20)
     })
 
     it('returns the Graph object', function () {
       let graph = new Graph()
 
       graph.addVertex('a', { b: 10, c: 20 }).must.be.instanceOf(Graph)
-    })
-
-    it('requires name to be a string', function () {
-      let graph = new Graph()
-
-      demand(graph.addVertex.bind(graph, 2, { b: 10, c: 20 })).throw(TypeError)
-    })
-
-    it('requires edges to be an object', function () {
-      let graph = new Graph()
-
-      demand(graph.addVertex.bind(graph, 'ok', 10)).throw(TypeError)
     })
   })
 
