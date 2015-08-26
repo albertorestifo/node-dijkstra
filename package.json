@@ -9,8 +9,7 @@
     "url": "https://github.com/albertorestifo/node-dijkstra"
   },
   "scripts": {
-    "test": "standard && mocha -b -R spec",
-    "coverage": "standard && istanbul cover _mocha -- --ui bdd -R spec -t 5000"
+    "test": "standard && istanbul cover _mocha -- --ui bdd -R spec -t 5000"
   },
   "bugs": {
     "url": "https://github.com/albertorestifo/node-dijkstra/issues"
