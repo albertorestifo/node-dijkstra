@@ -3,14 +3,13 @@
   "version": "1.1.2",
   "description": "A NodeJS implementation of Dijkstra's algorithm",
   "author": "Alberto Restifo <alberto.restifo@gmail.com>",
-  "main": "graph.js",
+  "main": "libs/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/albertorestifo/node-dijkstra"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha -b -R spec",
-    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000 && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "test": "standard && istanbul cover _mocha -- --ui bdd -R spec -t 5000"
   },
   "bugs": {
     "url": "https://github.com/albertorestifo/node-dijkstra/issues"
@@ -21,13 +20,19 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "chai": "^3.0.0",
+    "babel-eslint": "^4.0.10",
+    "codecov.io": "^0.1.6",
     "istanbul": "^0.3.13",
     "mocha": "^2.2.4",
+    "must": "^0.12.0",
     "sinon": "^1.14.1",
-    "coveralls": "^2.11.2"
+    "standard": "^5.1.0"
   },
   "dependencies": {
-    "101": "^1.0.0"
+    "priorityqueuejs": "^1.0.0"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": []
   }
 }

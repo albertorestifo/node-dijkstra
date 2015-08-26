@@ -1,113 +1,164 @@
-[![Build Status](https://travis-ci.org/albertorestifo/node-dijkstra.svg)](https://travis-ci.org/albertorestifo/node-dijkstra) [![Coverage Status](https://coveralls.io/repos/albertorestifo/node-dijkstra/badge.svg)](https://coveralls.io/r/albertorestifo/node-dijkstra) [![Dependency Status](https://gemnasium.com/albertorestifo/node-dijkstra.svg)](https://gemnasium.com/albertorestifo/node-dijkstra) [![Code Climate](https://codeclimate.com/github/albertorestifo/node-dijkstra/badges/gpa.svg)](https://codeclimate.com/github/albertorestifo/node-dijkstra) [![NPM](https://img.shields.io/npm/v/node-dijkstra.svg)](https://www.npmjs.com/package/node-dijkstra)
-
 # node-dijkstra
 
-A NodeJS (or io.js) implementation of the Dijkstra's shortest path problem.
+[![Build Status](https://travis-ci.org/albertorestifo/node-dijkstra.svg?branch=harmony)](https://travis-ci.org/albertorestifo/node-dijkstra) [![codecov.io](http://codecov.io/github/albertorestifo/node-dijkstra/coverage.svg?branch=master)](http://codecov.io/github/albertorestifo/node-dijkstra?branch=master) [![Dependency Status](https://david-dm.org/albertorestifo/node-dijkstra.svg)](https://david-dm.org/albertorestifo/node-dijkstra)
+
+> Fast JavaScript implementation of the  Dijkstra's shortest path problem for iojs and NodeJS
+
+**NodeJS users beware:** since version `2` of this plugin uses some incompatible ES6 faetures. The version `1.1.3` is stable and safe to use on NodeJS.
+
+Install it with `npm install node-dijkstra@1.1.3 --save`
 
 ## Installation
+
+Since version 2 this plugin uses some ES6 features. On iojs you can install the lastest version:
 
 ```shell
 npm install node-dijkstra --save
 ```
+
+### NodeJS
+
+On Node it's safe to use the version `1.1.3` that you can install as follows:
+
+```shell
+npm install node-dijkstra@1.1.3 --save
+```
+
+You can then refer to the [`v1.1.3` documentation](https://github.com/albertorestifo/node-dijkstra/blob/v1.1.3/README.md#api)
 
 ## Usage
 
 Basic example:
 
 ```js
-var Graph = require('node-dijkstras');
+const Graph = require('node-dijkstras')
 
-var g = new Graph();
+const route = new Graph()
 
-g.addVertex('A', {B:1});
-g.addVertex('B', {A:1, C:2, D: 4});
-g.addVertex('C', {B:2, D:1});
-g.addVertex('D', {C:1, B:4});
+route.addVertex('A', { B:1 })
+route.addVertex('B', { A:1, C:2, D: 4 })
+route.addVertex('C', { B:2, D:1 })
+route.addVertex('D', { C:1, B:4 })
 
-console.log(g.shortestPath('A', 'D')); // => ['A', 'B', 'C', 'D']
+route.path('A', 'D') // => [ 'A', 'B', 'C', 'D' ]
 ```
 
 ## API
 
 ### `Graph([vertices])`
 
-**Parameters:**
+#### Parameters
 
-- `verticies` (optional): An object containing a vertices graph.
+- `Object verticies` _optional_: Initial vertices graph.
+
+A vertices graph must follow this structure:
+
+```
+{
+  vertex: {
+    vertex: cost Number
+  }
+}
+```
 
 ```js
-var g = new Graph();
-// or
-var g = new Graph({
-  A: {B: 1, C: 2},
-  B: {A: 1}
+{
+  'A': {
+    'B': 1
+  },
+  'B': {
+    'A': 1,
+    'C': 2,
+    'D': 4
+  }
+}
+```
+
+#### Example
+
+```js
+const route = new Graph()
+
+// or with pre-populated graph
+const route = new Graph({
+  'A': { 'B': 1 },
+  'B': { 'A': 1, 'C': 2, 'D': 4 }
 })
 ```
 
 
 
-### `Graph.prototype.addVertex(name, edges)`
+### `Graph#addVertex(name, edges)`
 
-**Parameters:**
+Add a vertex to the vertices graph
 
-- `name`: name of the vertex
-- `edges`: object containing the connected vertices and the cost
+#### Parameters
 
-**Returns:** `this`
+- `String name`: name of the vertex
+- `Object edges`: object containing the name of the connected vertices as keys and as value the cost to the vertex
+
+#### Returns
+
+Returns `this` allowing chained calls.
 
 ```js
-var g = new Graph();
+const route = new Graph()
 
-g.addVertex('A', {B:1});
+route.addVertex('A', { B: 1 })
 
-// you can chain the calls
-g.addVertex('B', {A:1}).addVertex('C', {A:3});
+// cahining is possible
+route.addVertex('B', { A: 1 }).addVertex('C', { A: 3 });
 ```
 
 
 
-### `Graph.prototype.shortestPath(start, finish [, options])`
+### `Graph#path(origin, destination [, options])`
 
-**Parameters:**
+#### Parameters
 
-- `start`: name of the starting vertex
-- `finish`: name of the end vertex
-- `options`: optional options object
+- `String origin`: Name of the origin vertex
+- `String finish`: Name of the destination vertex
+- `Object options` _optional_: Addittional options:
+  - `Boolean trim`, deafult `false`: If set to true, the result won't include the origin and destination vertices
+  - `Boolean reverse`, default `false`: If set to true, the result will be in reverse order, from destination to origin
 
-**Returns:**
+#### Returns
 
-`Array` containing the crossed vertices names, in order from the starting vertex to the finish vertex, by default it includes the start and finish vertices as well. Returns `null` if no path can be found between the start and finish vertices.
+`Array` containing the crossed vertices names, by default ordered from the origin to the destination vertex. Setting `options.reverse` to true will invert the result.
 
-**Options:**
+Returns `null` if no path can be found between the start and finish vertices.
 
-- `trim` (default: `false`): if set to true, it won't include the starting and finish vertices in the returned path.
-- `reverse` (default: `false`): if set to true, it will return the array vertices in reversed order
+By default, the array includes the origin and destination vertices. Setting `options.trim` to true will remove those.
 
 ```js
-var Graph = require('node-dijkstras');
+const Graph = require('node-dijkstras')
 
-var g = new Graph();
+const route = new Graph()
 
-g.addVertex('A', {B:1});
-g.addVertex('B', {A:1, C:2, D: 4});
-g.addVertex('C', {B:2, D:1});
-g.addVertex('D', {C:1, B:4});
+route.addVertex('A', { B: 1 })
+route.addVertex('B', { A: 1, C: 2, D: 4 })
+route.addVertex('C', { B: 2, D: 1 })
+route.addVertex('D', { C: 1, B: 4 })
 
-g.shortestPath('A', 'D'); // => ['A', 'B', 'C', 'D']
+route.path('A', 'D') // => ['A', 'B', 'C', 'D']
 
 // trimmed
-g.shortestPath('A', 'D', {trim: true}); // => [B', 'C']
+route.path('A', 'D', { trim: true }) // => [B', 'C']
 
 // reversed
-g.shortestPath('A', 'D', {reverse: true}); // => ['D', 'C', 'B', 'A']
+route.path('A', 'D', { reverse: true }) // => ['D', 'C', 'B', 'A']
 
 // reversed and trimmed
-g.shortestPath('A', 'D', {
+route.path('A', 'D', {
   reverse: true,
   trim: true
-}); // => ['C', 'B']
+}) // => ['C', 'B']
 ```
 
+## Upgrading from `v1`
+
+- The `v2` release in not compatible with NodeJS
+- The method `shortestPath` has been renamed `path`, but an alias is provided so there is no need to update your code
 
 
 ## Testing
@@ -115,6 +166,8 @@ g.shortestPath('A', 'D', {
 ```shell
 npm test
 ```
+
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 
 [1]: https://github.com/andrewhayward/dijkstra
