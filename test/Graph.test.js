@@ -32,11 +32,11 @@ describe('Graph', function () {
 
   })
 
-  describe('#addVertex()', function () {
+  describe('#addNode()', function () {
     it('adds a vertex', function () {
       let route = new Graph()
 
-      route.addVertex('a', { b: 10, c: 20 })
+      route.addNode('a', { b: 10, c: 20 })
 
       let node = route.graph.get('a')
 
@@ -48,7 +48,19 @@ describe('Graph', function () {
     it('returns the Graph object', function () {
       let graph = new Graph()
 
-      graph.addVertex('a', { b: 10, c: 20 }).must.be.instanceOf(Graph)
+      graph.addNode('a', { b: 10, c: 20 }).must.be.instanceOf(Graph)
+    })
+  })
+
+  describe('#addNode()', function () {
+    it('is alias of Graph#addVertex()', function () {
+      let route = new Graph()
+      sinon.spy(route, 'addNode')
+
+      route.addVertex('a', { b: 1 })
+
+      sinon.assert.calledOnce(route.addNode)
+      sinon.assert.alwaysCalledOn(route.addNode, route)
     })
   })
 

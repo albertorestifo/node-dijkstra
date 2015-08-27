@@ -22,13 +22,22 @@ class Graph {
    * @param {string} name      - Name of the node
    * @param {object} neighbors - Neighbouring nodes and cost to reach them
    */
-  addVertex (name, neighbors) {
+  addNode (name, neighbors) {
     let _neighbors = new Map()
 
     populateMap(_neighbors, neighbors, Object.keys(neighbors))
     this.graph.set(name, _neighbors)
 
     return this
+  }
+
+  /**
+   * Alias of addNode
+   */
+  addVertex () {
+    console.log('Graph#addVertex is deprecated, use Graph#addNode instead')
+
+    return this.addNode.apply(this, arguments)
   }
 
   /**
@@ -156,6 +165,8 @@ class Graph {
    * Alias of `path`
    */
   shortestPath () {
+    console.log('Graph#shortestPath is deprecated, use Graph#path instead')
+
     return this.path.apply(this, arguments)
   }
 
