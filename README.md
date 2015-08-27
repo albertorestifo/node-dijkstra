@@ -31,28 +31,28 @@ const Graph = require('node-dijkstras')
 
 const route = new Graph()
 
-route.addVertex('A', { B:1 })
-route.addVertex('B', { A:1, C:2, D: 4 })
-route.addVertex('C', { B:2, D:1 })
-route.addVertex('D', { C:1, B:4 })
+route.addNode('A', { B:1 })
+route.addNode('B', { A:1, C:2, D: 4 })
+route.addNode('C', { B:2, D:1 })
+route.addNode('D', { C:1, B:4 })
 
 route.path('A', 'D') // => [ 'A', 'B', 'C', 'D' ]
 ```
 
 ## API
 
-### `Graph([vertices])`
+### `Graph([nodes])`
 
 #### Parameters
 
-- `Object verticies` _optional_: Initial vertices graph.
+- `Object nodes` _optional_: Initial nodes graph.
 
-A vertices graph must follow this structure:
+A nodes graph must follow this structure:
 
 ```
 {
-  vertex: {
-    vertex: cost Number
+  node: {
+    neighbor: cost Number
   }
 }
 ```
@@ -84,14 +84,14 @@ const route = new Graph({
 
 
 
-### `Graph#addVertex(name, edges)`
+### `Graph#addNode(name, edges)`
 
-Add a vertex to the vertices graph
+Add a node to the nodes graph
 
 #### Parameters
 
-- `String name`: name of the vertex
-- `Object edges`: object containing the name of the connected vertices as keys and as value the cost to the vertex
+- `String name`: name of the node
+- `Object edges`: object containing the name of the neighboring nodes and their cost
 
 #### Returns
 
@@ -100,41 +100,46 @@ Returns `this` allowing chained calls.
 ```js
 const route = new Graph()
 
-route.addVertex('A', { B: 1 })
+route.addNode('A', { B: 1 })
 
-// cahining is possible
-route.addVertex('B', { A: 1 }).addVertex('C', { A: 3 });
+// chaining is possible
+route.addNode('B', { A: 1 }).addNode('C', { A: 3 });
 ```
 
+### `Graph#addVertex(name, edges)`
 
+**Deprecated:** Use `Graph#addNode` instead
 
-### `Graph#path(origin, destination [, options])`
+### `Graph#path(start, goal [, options])`
 
 #### Parameters
 
-- `String origin`: Name of the origin vertex
-- `String finish`: Name of the destination vertex
+- `String start`: Name of the starting node
+- `String goal`: Name of out goal node
 - `Object options` _optional_: Addittional options:
-  - `Boolean trim`, deafult `false`: If set to true, the result won't include the origin and destination vertices
-  - `Boolean reverse`, default `false`: If set to true, the result will be in reverse order, from destination to origin
+  - `Boolean trim`, deafult `false`: If set to true, the result won't include the start and goal nodes
+  - `Boolean reverse`, default `false`: If set to true, the result will be in reverse order, from goal to start
+  - `Boolean cost`, default `false`: If set to true, an object will be returned with the following keys:
+    - `Array path`: Computed path (subject to other options)
+    - `Number cost`: Total cost for the found path
 
 #### Returns
 
-`Array` containing the crossed vertices names, by default ordered from the origin to the destination vertex. Setting `options.reverse` to true will invert the result.
+If `options.cost` is `false` (default behaviour) an `Array` will be returned, containing the name of the crossed nodes. By default it will be ordered from start to goal, and those nodes will also be included. This behaviour can be changes with `options.trim` and `options.reverse` (see above)
 
-Returns `null` if no path can be found between the start and finish vertices.
+If `options.cost` is `true`, an `Object` with keys `path` and `cost` will be returned. `path` follows the same rules as above and `cost` is the total cost of the found route between nodes.
 
-By default, the array includes the origin and destination vertices. Setting `options.trim` to true will remove those.
+When to route can be found, the path will be set to `null`.
 
 ```js
 const Graph = require('node-dijkstras')
 
 const route = new Graph()
 
-route.addVertex('A', { B: 1 })
-route.addVertex('B', { A: 1, C: 2, D: 4 })
-route.addVertex('C', { B: 2, D: 1 })
-route.addVertex('D', { C: 1, B: 4 })
+route.addNode('A', { B: 1 })
+route.addNode('B', { A: 1, C: 2, D: 4 })
+route.addNode('C', { B: 2, D: 1 })
+route.addNode('D', { C: 1, B: 4 })
 
 route.path('A', 'D') // => ['A', 'B', 'C', 'D']
 
@@ -144,17 +149,23 @@ route.path('A', 'D', { trim: true }) // => [B', 'C']
 // reversed
 route.path('A', 'D', { reverse: true }) // => ['D', 'C', 'B', 'A']
 
-// reversed and trimmed
-route.path('A', 'D', {
-  reverse: true,
-  trim: true
-}) // => ['C', 'B']
+// include the cost
+route.path('A', 'D', { cost: true })
+// => {
+//       path: [ 'A', 'B', 'C', 'D' ],
+//       cost: 4
+//    }
 ```
+
+### `Graph#shortestPath(origin, destination [, options])`
+
+**Deprecated:** Use `Graph#path` instead
 
 ## Upgrading from `v1`
 
 - The `v2` release in not compatible with NodeJS
-- The method `shortestPath` has been renamed `path`, but an alias is provided so there is no need to update your code
+- The method `Graph#shortestPath` has been deprecated, use `Graph#path` instead
+- The method `Graph#addVertex` has been deprecated, use `Graph#addNode` instead
 
 
 ## Testing
