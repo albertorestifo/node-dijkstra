@@ -88,6 +88,11 @@ class PriorityQueue {
     return this._keys.has(key)
   }
 
+  /**
+   * Return the priority for a key
+   *
+   * @param {string} key - The key to search
+   */
   get (key) {
     let result
     this._queue.forEach(function (element) {
