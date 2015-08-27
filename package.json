@@ -28,9 +28,7 @@
     "sinon": "^1.14.1",
     "standard": "^5.1.0"
   },
-  "dependencies": {
-    "priorityqueuejs": "^1.0.0"
-  },
+  "dependencies": {},
   "standard": {
     "parser": "babel-eslint",
     "ignore": []
