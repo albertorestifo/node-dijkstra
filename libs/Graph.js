@@ -53,7 +53,11 @@ class Graph {
     options = options || {}
 
     // Don't run when we don't have nodes set
-    if (!this.graph.size) return null
+    if (!this.graph.size) {
+      if (options.cost) return { path: null, cost: 0 }
+
+      return null
+    }
 
     let explored = new Set()
     let frontier = new Queue()

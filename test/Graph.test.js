@@ -67,12 +67,32 @@ describe('Graph', function () {
       path.must.eql([ 'a', 'b', 'c' ])
     })
 
+    it('retuns an object containing the cost', function () {
+      const route = new Graph(vertices)
+
+      const res = route.path('a', 'c', { cost: true })
+
+      res.must.be.object()
+      res.path.must.eql([ 'a', 'b', 'c' ])
+      res.cost.must.equal(40)
+    })
+
     it('retuns the inverted path', function () {
       const route = new Graph(vertices)
 
       const path = route.path('a', 'c', { reverse: true })
 
       path.must.eql([ 'c', 'b', 'a' ])
+    })
+
+    it('retuns an object containing the cost and inverted path', function () {
+      const route = new Graph(vertices)
+
+      const res = route.path('a', 'c', { cost: true, reverse: true })
+
+      res.must.be.object()
+      res.path.must.eql([ 'c', 'b', 'a' ])
+      res.cost.must.equal(40)
     })
 
     it('retuns the trimmed path', function () {
@@ -83,12 +103,32 @@ describe('Graph', function () {
       path.must.eql([ 'b' ])
     })
 
+    it('retuns an object containing the cost and trimmed path', function () {
+      const route = new Graph(vertices)
+
+      const res = route.path('a', 'c', { cost: true, trim: true })
+
+      res.must.be.object()
+      res.path.must.eql([ 'b' ])
+      res.cost.must.equal(40)
+    })
+
     it('retuns the reverse and trimmed path', function () {
       const route = new Graph(vertices)
 
       const path = route.path('a', 'c', { trim: true })
 
       path.must.eql([ 'b' ])
+    })
+
+    it('retuns an object containing the cost and inverted and trimmed path', function () {
+      const route = new Graph(vertices)
+
+      const res = route.path('a', 'c', { cost: true, reverse: true, trim: true })
+
+      res.must.be.object()
+      res.path.must.eql([ 'b' ])
+      res.cost.must.equal(40)
     })
 
     it('returns null when no path is found', function () {
@@ -99,12 +139,30 @@ describe('Graph', function () {
       demand(path).be.null()
     })
 
+    it('returns null as path and 0 as cost when no path exists and we want the cost', function () {
+      const route = new Graph(vertices)
+
+      const res = route.path('a', 'd', { cost: true })
+
+      demand(res.path).be.null()
+      res.cost.must.equal(0)
+    })
+
     it('returns null when no vertices are defined', function () {
       const route = new Graph()
 
       const path = route.path('a', 'd')
 
       demand(path).be.null()
+    })
+
+    it('returns null as path and 0 as cost when no vertices are defined and we want the cost', function () {
+      const route = new Graph()
+
+      const res = route.path('a', 'd', { cost: true })
+
+      demand(res.path).be.null()
+      res.cost.must.equal(0)
     })
 
     it('works with a more complicated graph', function () {
