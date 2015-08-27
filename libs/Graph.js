@@ -6,7 +6,7 @@ const populateMap = require('./populateMap')
 class Graph {
 
   /**
-   * Construct the base verticies map
+   * Construct the base graph
    *
    * @param {object} [graph] - Initialize the graph with nodes
    */

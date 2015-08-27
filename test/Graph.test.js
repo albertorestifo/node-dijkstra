@@ -6,7 +6,7 @@ require('must')
 const demand = require('must')
 const sinon = require('sinon')
 
-const Graph = require('../libs/')
+const Graph = require('../libs/Graph')
 
 describe('Graph', function () {
 
