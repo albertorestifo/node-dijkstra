@@ -9,9 +9,7 @@ const sinon = require('sinon')
 const Graph = require('../libs/Graph')
 
 describe('Graph', function () {
-
   describe('#constructor', function () {
-
     it('creates an instance of Graph', function () {
       let graph = new Graph()
 
@@ -29,7 +27,6 @@ describe('Graph', function () {
 
       a.must.be.instanceOf(Map)
     })
-
   })
 
   describe('#addNode()', function () {
@@ -190,7 +187,6 @@ describe('Graph', function () {
 
       path.must.eql([ 'a', 'c', 'd', 'e' ])
     })
-
   })
 
   describe('#shortestPath()', function () {
@@ -207,5 +203,4 @@ describe('Graph', function () {
       sinon.assert.calledOnce(route.path)
     })
   })
-
 })
