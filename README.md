@@ -2,19 +2,19 @@
 
 [![Build Status](https://travis-ci.org/albertorestifo/node-dijkstra.svg?branch=harmony)](https://travis-ci.org/albertorestifo/node-dijkstra) [![codecov.io](http://codecov.io/github/albertorestifo/node-dijkstra/coverage.svg?branch=master)](http://codecov.io/github/albertorestifo/node-dijkstra?branch=master) [![Dependency Status](https://david-dm.org/albertorestifo/node-dijkstra.svg)](https://david-dm.org/albertorestifo/node-dijkstra)
 
-> Fast JavaScript implementation of the  Dijkstra's shortest path problem for iojs and NodeJS
+> Fast JavaScript implementation of the  Dijkstra's shortest path problem for NodeJS
 
 ## Installation
 
-Since version 2 this plugin uses some ES6 features. On iojs you can install the lastest version:
+Since version 2 this plugin uses some ES6 features. You can run the latest version on **NodeJS `v4.0.0` or newer** and **iojs**
 
 ```shell
 npm install node-dijkstra --save
 ```
 
-### NodeJS
+### NodeJS prior `v4.0.0`
 
-On Node it's safe to use the version `1.1.3` that you can install as follows:
+On versions of NodeJS prior `v4.0.0`, although less performant, it's safe to use the version `1.1.3` that you can install as follows:
 
 ```shell
 npm install node-dijkstra@1.1.3 --save
