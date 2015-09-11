@@ -8,7 +8,6 @@ const sinon = require('sinon')
 const Queue = require('../libs/PriorityQueue')
 
 describe('PriorityQueue', function () {
-
   describe('#constructor', function () {
     it('starts an empty queue and keys set', function () {
       let queue = new Queue()
@@ -32,7 +31,6 @@ describe('PriorityQueue', function () {
   })
 
   describe('#set()', function () {
-
     it('only accept numbers as priority values', function () {
       let queue = new Queue()
 
@@ -135,5 +133,4 @@ describe('PriorityQueue', function () {
       res.priority.must.equal(3)
     })
   })
-
 })

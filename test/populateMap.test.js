@@ -7,7 +7,6 @@ const demand = require('must')
 const populateMap = require('../libs/populateMap')
 
 describe('populateMap()', function () {
-
   it('transforms a one level object', function () {
     var map = new Map()
     var obj = { example: 1 }
@@ -108,5 +107,4 @@ describe('populateMap()', function () {
     map.size.must.equal(1)
     map.get('example').must.equal(4)
   })
-
 })
