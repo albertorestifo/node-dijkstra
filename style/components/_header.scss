@@ -1,0 +1,38 @@
+@import '../variables';
+
+// Header styling
+header {
+  width: 100%;
+  background-color: $color-header-background;
+  height: 60vh;
+  min-height: 400px;
+  color: $color-light-text;
+  position: relative;
+}
+
+// Proposition and package name, centered and main focus point
+.center-prop {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+
+  h1 {
+    font: {
+      size: 4em;
+      weight: 800;
+    }
+    margin: 0;
+  }
+
+  span {
+    font: {
+      size: 1.5em;
+      weight: 400;
+    }
+    display: block;
+    margin-top: .8em;
+    color: $color-light-secondary;
+  }
+}

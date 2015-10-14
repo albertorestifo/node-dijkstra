@@ -26,7 +26,7 @@ gulp.task('style', () => {
  */
 gulp.task('watch', [ 'style' ], () => {
 
-  gulp.watch('./style/**.scss', [ 'style' ])
+  gulp.watch('./style/**/**.scss', [ 'style' ])
 
   return browserSync.init({ server: './' })
 })

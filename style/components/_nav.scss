@@ -1,0 +1,33 @@
+@import '../variables';
+
+// Navigation
+nav {
+  position: fixed;
+  top: 3em;
+  right: 10%;
+
+  a {
+    color: $color-light-secondary;
+    text-decoration: none;
+    margin-right: 1.5em;
+    font-weight: 700;
+
+    &:hover {
+      color: $color-light-text;
+    }
+
+    &::after {
+      content: '•';
+      color: rgba(255, 255, 255, .3);
+      margin-left: 1.5em;
+    }
+
+    &:last-child {
+      margin-right: 0;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
