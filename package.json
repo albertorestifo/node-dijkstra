@@ -1,6 +1,15 @@
 {
   "private": true,
   "scripts": {
-    "build": "gulp build"
+    "build": "gulp build",
+    "dev": "gulp dev"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.9.11",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.0.2",
+    "gulp-minify-css": "^1.2.1",
+    "gulp-sass": "^2.0.4",
+    "gulp-sourcemaps": "^1.6.0"
   }
 }

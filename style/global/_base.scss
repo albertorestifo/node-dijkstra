@@ -1,0 +1,9 @@
+@import '../variables';
+
+html, body {
+  font: {
+    family: 'Open Sans', sans-serif;
+    size: 16px;
+    color: $color-text;
+  }
+}
