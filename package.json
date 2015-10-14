@@ -1,36 +1,6 @@
 {
-  "name": "node-dijkstra",
-  "version": "2.2.0",
-  "description": "A NodeJS implementation of Dijkstra's algorithm",
-  "author": "Alberto Restifo <alberto.restifo@gmail.com>",
-  "main": "libs/Graph.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/albertorestifo/node-dijkstra"
-  },
+  "private": true,
   "scripts": {
-    "test": "standard && istanbul cover _mocha -- --ui bdd -R spec -t 5000"
-  },
-  "bugs": {
-    "url": "https://github.com/albertorestifo/node-dijkstra/issues"
-  },
-  "keywords": [
-    "dijkstra",
-    "shortest path"
-  ],
-  "license": "MIT",
-  "devDependencies": {
-    "babel-eslint": "^4.0.10",
-    "codecov.io": "^0.1.6",
-    "istanbul": "^0.3.13",
-    "mocha": "^2.2.4",
-    "must": "^0.12.0",
-    "sinon": "^1.14.1",
-    "standard": "^5.1.0"
-  },
-  "dependencies": {},
-  "standard": {
-    "parser": "babel-eslint",
-    "ignore": []
+    "build": "gulp build"
   }
 }
