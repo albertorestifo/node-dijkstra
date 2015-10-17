@@ -27,7 +27,7 @@ You can then refer to the [`v1.1.3` documentation](https://github.com/albertores
 Basic example:
 
 ```js
-const Graph = require('node-dijkstras')
+const Graph = require('node-dijkstra')
 
 const route = new Graph()
 
