@@ -2,7 +2,9 @@
 // Baseline definitions
 @import 'variables';
 @import 'vendors/normalize';
+@import 'vendors/solarized_light.scss';
 
 // Components
+@import 'components/grid';
 @import 'components/header';
 @import 'components/nav';

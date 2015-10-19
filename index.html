@@ -6,7 +6,13 @@
 
     <link rel="stylesheet" href="dist/style/main.css" />
 
+    <!-- Syntax Hilighter -->
+    <script src="dist/js/highlight.pack.js"></script>
+
     <script type="text/javascript">
+      // Start hilight
+      hljs.initHighlightingOnLoad();
+
       // Load OpenSans with WebFont loader
       WebFontConfig = {
         google: { families: [ 'Open+Sans:400,800,700:latin' ] }
@@ -42,7 +48,43 @@
     <section id="quick-start">
       <h2>Quick Start</h2>
 
-      <p>NodeJS <code>v4.0.0</code> or higher is required to run the standard distribution.</p>
+      <p>
+        If you are already familiar with the Dijkstra's Shortest Path Problem
+        and just want to get the feel of the library that's the right place to
+        start. You then might want to check out the <a href="#api">full API</a>.
+      </p>
+
+      <pre><code class="javascript">
+const Graph = require('node-dijkstra')
+
+const route = new Graph()
+
+route.addNode('A', { B:1 })
+route.addNode('B', { A:1, C:2, D: 4 })
+route.addNode('C', { B:2, D:1 })
+route.addNode('D', { C:1, B:4 })
+
+route.path('A', 'D') // => [ 'A', 'B', 'C', 'D' ]
+      </pre></code>
+
+    </section>
+
+    <section id="installation">
+      <h2>Installation</h2>
+
+      <h3>NPM</h3>
+      <pre><code>
+npm install --save node-dijkstra
+      </pre></code>
+
+      <h3>Bower</h3>
+      <pre><code>
+bower install --save node-dijkstra
+      </pre></code>
+
+      <h3>Direct Soruce</h3>
+      <p>
+        There are two diffrent 
 
     </section>
 
