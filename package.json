@@ -9,7 +9,8 @@
     "url": "https://github.com/albertorestifo/node-dijkstra"
   },
   "scripts": {
-    "test": "standard && istanbul cover _mocha -- --ui bdd -R spec -t 5000"
+    "test": "standard && istanbul cover _mocha -- --ui bdd -R spec -t 5000",
+    "compile": "gulp build"
   },
   "bugs": {
     "url": "https://github.com/albertorestifo/node-dijkstra/issues"
@@ -21,12 +22,18 @@
   "license": "MIT",
   "devDependencies": {
     "babel-eslint": "^4.0.10",
+    "browserify": "^11.2.0",
     "codecov.io": "^0.1.6",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.3.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.4.2",
     "istanbul": "^0.3.13",
     "mocha": "^2.2.4",
     "must": "^0.12.0",
     "sinon": "^1.14.1",
-    "standard": "^5.1.0"
+    "standard": "^5.1.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {},
   "standard": {
