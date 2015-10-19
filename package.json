@@ -38,6 +38,8 @@
   "dependencies": {},
   "standard": {
     "parser": "babel-eslint",
-    "ignore": []
+    "ignore": [
+      "/dist/"
+    ]
   }
 }
