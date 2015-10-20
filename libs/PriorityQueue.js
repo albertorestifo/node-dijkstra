@@ -1,50 +1,57 @@
 'use strict'
 
+/**
+ * This very basic implementation of a priority queue is used to select the
+ * next node of the graph to walk to.
+ *
+ * The queue is always sorted to have the least expensive node on top. Some
+ * comodoty methods are also implemented.
+ *
+ * You should **never** modify the queue directly, but only using the methods
+ * provided by the class.
+ */
 class PriorityQueue {
 
   /**
-   * Creates a new queue:
+   * Creates a new empty priority queue
    */
   constructor () {
+    // The `_keys` set is used to greately improve the speed at which we can
+    // check the presence of a value in the queue
     this._keys = new Set()
+
     this._queue = []
   }
 
   /**
-   * Sort the queue to oderd them based on the priority
+   * Sort the queue to have the least expensive node to visit on top
    *
    * @private
    */
   _sort () {
-    this._queue.sort(function (a, b) {
-      return a.priority - b.priority
-    })
+    this._queue.sort((a, b) => a.priority - b.priority)
   }
 
   /**
-   * Add or update the priority of a key
+   * Sets a priority for a key in the queue.
+   * Inserts it in the queue if it does not already exists.
    *
-   * @param {any}    key      - Key to insert
-   * @param {number} priority - Priority of the key
-   *
-   * @return {nunber} Size of the queue
+   * @param {any}     key       Key to update or insert
+   * @param {number}  priority  Priority of the key
+   * @return {number} Size of the queue
    */
   set (key, priority) {
     priority = Number(priority)
-    if (isNaN(priority)) {
-      throw new TypeError('"priority" must be a valid number')
-    }
+    if (isNaN(priority)) throw new TypeError('"priority" must be a number')
 
     if (!this._keys.has(key)) {
-      // If the `_keys` set does not have this key, we are inserting a new one
+      // Insert a new entry if the key is not already in the queue
       this._keys.add(key)
       this._queue.push({ key, priority })
     } else {
       // Update the priority of an existing key
-      this._queue.map(function (element) {
-        if (element.key === key) {
-          element.priority = priority
-        }
+      this._queue.map(element => {
+        if (element.key === key) element.priority = priority
 
         return element
       })
@@ -56,9 +63,10 @@ class PriorityQueue {
   }
 
   /**
-   * Remove the first element from the priority queue and returns it
+   * The next method is used to dequeue a key:
+   * It removes the first element from the queue and returns it
    *
-   * @return {object} The object as of the priority queue
+   * @return {object} First priority queue entry
    */
   next () {
     const element = this._queue.shift()
@@ -70,18 +78,16 @@ class PriorityQueue {
   }
 
   /**
-   * Return true if the queue is empty
-   *
-   * @return {boolean}
+   * @return {boolean} `true` when the queue is empty
    */
   isEmpty () {
-    return Boolean(!this._queue.length)
+    return Boolean(this._queue.length === 0)
   }
 
   /**
-   * Returns true if the queue contains the specified key
+   * Check if the queue has a key in it
    *
-   * @param {any} key - Key to check
+   * @param {any} key   Key to lookup
    * @return {boolean}
    */
   has (key) {
@@ -89,17 +95,13 @@ class PriorityQueue {
   }
 
   /**
-   * Return the priority for a key
+   * Get the element in the queue with the specified key
    *
-   * @param {string} key - The key to search
+   * @param {any} key   Key to lookup
+   * @return {object}
    */
   get (key) {
-    let result
-    this._queue.forEach(function (element) {
-      if (element.key === key) result = element
-    })
-
-    return result
+    return this._queue.find(element => element.key === key)
   }
 
 }

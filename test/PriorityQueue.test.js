@@ -35,7 +35,7 @@ describe('PriorityQueue', function () {
       let queue = new Queue()
 
       demand(queue.set.bind(queue, 'key', {}))
-        .throw(TypeError, /valid number/)
+        .throw(TypeError, /number/)
     })
 
     it('adds an unexisting key to the queue and reorders it', function () {

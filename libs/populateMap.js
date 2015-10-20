@@ -1,34 +1,35 @@
 'use strict'
 
 /**
- * Assert that the cost is a positive number
+ * Assert that the provided cost in a positive number
  *
  * @private
- * @param {number} cost - The cost to validate
- * @return {number}
+ * @param {number} cost   Cost to validate
+ * @return {number} cost
  */
 function validateNode (cost) {
-  let _cost = Number(cost)
+  cost = Number(cost)
 
-  if (isNaN(_cost)) {
+  if (isNaN(cost)) {
     throw new TypeError(`Cost must be a number, istead got ${cost}`)
   }
 
-  if (_cost <= 0) {
+  if (cost <= 0) {
     throw new TypeError(`The cost must be a number above 0, instead got ${cost}`)
   }
 
-  return _cost
+  return cost
 }
 
 /**
- * Populate a map with the values of an object with nested maps
+ * Populates the `Map` passed as first agument with the values in the provided
+ * object. Supports nested objects, recursively adding them to a `Map`
  *
- * @param {Map}    map    - Map to populate
- * @param {object} object - Object to use for the population
- * @param {array}  keys   - Array of keys of the object
+ * @param {Map}    map      `Map` to populate with the values from the object
+ * @param {object} object   Object to translate into the `Map`
+ * @param {array}  keys     Keys of the object to assign to the `Map`
  *
- * @return {Map} Populated map
+ * @return {Map} Populated `Map` with nested `Map`s
  */
 function populateMap (map, object, keys) {
   // Return the map once all the keys have been populated
@@ -38,7 +39,8 @@ function populateMap (map, object, keys) {
   let value = object[key]
 
   if (value !== null && typeof value === 'object') {
-    // When value is an object, we transform every key of it into a map
+    // When the key is an object, we recursevely populate its proprieties into
+    // a new `Map`
     value = populateMap(new Map(), value, Object.keys(value))
   } else {
     // Ensure the node is a positive number
