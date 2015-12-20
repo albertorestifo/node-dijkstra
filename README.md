@@ -163,7 +163,7 @@ route.path('A', 'D', { cost: true })
 
 ## Upgrading from `v1`
 
-- The `v2` release in not compatible with NodeJS
+- The `v2` release in not compatible with NodeJS prior to the version 4.0
 - The method `Graph#shortestPath` has been deprecated, use `Graph#path` instead
 - The method `Graph#addVertex` has been deprecated, use `Graph#addNode` instead
 
