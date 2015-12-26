@@ -132,7 +132,7 @@ If `options.cost` is `true`, an `Object` with keys `path` and `cost` will be ret
 When to route can be found, the path will be set to `null`.
 
 ```js
-const Graph = require('node-dijkstras')
+const Graph = require('node-dijkstra')
 
 const route = new Graph()
 
