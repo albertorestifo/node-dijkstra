@@ -109,7 +109,7 @@ route.addNode('B', { A: 1 }).addNode('C', { A: 3 });
 
 ### `Graph#removeNode(name)`
 
-Removes a node and all it's references from the graph
+Removes a node and all its references from the graph
 
 #### Parameters
 
