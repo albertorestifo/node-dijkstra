@@ -204,4 +204,34 @@ describe('Graph', () => {
       sinon.assert.calledOnce(route.path);
     });
   });
+
+  describe('#removeNode()', () => {
+    it('removes a previously set node from the graph', () => {
+      const route = new Graph({
+        a: { b: 20, c: 80 },
+        b: { a: 20, c: 20 },
+        c: { a: 80, b: 20 },
+      });
+
+      route.removeNode('c');
+
+      route.graph.has('c').must.be.false();
+      route.graph.has('a').must.be.true();
+      route.graph.has('b').must.be.true();
+    });
+
+    it('removes all references to the removed node', () => {
+      const route = new Graph({
+        a: { b: 20, c: 80 },
+        b: { a: 20, c: 20 },
+        c: { a: 80, b: 20 },
+      });
+
+      route.removeNode('c');
+
+      route.graph.has('c').must.be.false();
+      route.graph.get('b').has('c').must.be.false();
+      route.graph.get('a').has('c').must.be.false();
+    });
+  });
 });
