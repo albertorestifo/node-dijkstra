@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * This very basic implementation of a priority queue is used to select the
  * next node of the graph to walk to.
@@ -15,12 +13,11 @@ class PriorityQueue {
   /**
    * Creates a new empty priority queue
    */
-  constructor () {
-    // The `_keys` set is used to greately improve the speed at which we can
+  constructor() {
+    // The `keys` set is used to greately improve the speed at which we can
     // check the presence of a value in the queue
-    this._keys = new Set()
-
-    this._queue = []
+    this.keys = new Set();
+    this.queue = [];
   }
 
   /**
@@ -28,8 +25,8 @@ class PriorityQueue {
    *
    * @private
    */
-  _sort () {
-    this._queue.sort((a, b) => a.priority - b.priority)
+  sort() {
+    this.queue.sort((a, b) => a.priority - b.priority);
   }
 
   /**
@@ -37,29 +34,30 @@ class PriorityQueue {
    * Inserts it in the queue if it does not already exists.
    *
    * @param {any}     key       Key to update or insert
-   * @param {number}  priority  Priority of the key
+   * @param {number}  value     Priority of the key
    * @return {number} Size of the queue
    */
-  set (key, priority) {
-    priority = Number(priority)
-    if (isNaN(priority)) throw new TypeError('"priority" must be a number')
+  set(key, value) {
+    const priority = Number(value);
+    if (isNaN(priority)) throw new TypeError('"priority" must be a number');
 
-    if (!this._keys.has(key)) {
+    if (!this.keys.has(key)) {
       // Insert a new entry if the key is not already in the queue
-      this._keys.add(key)
-      this._queue.push({ key, priority })
+      this.keys.add(key);
+      this.queue.push({ key, priority });
     } else {
       // Update the priority of an existing key
-      this._queue.map(element => {
-        if (element.key === key) element.priority = priority
+      this.queue.map(element => {
+        if (element.key === key) {
+          return Object.assing({}, element, { priority });
+        }
 
-        return element
-      })
+        return element;
+      });
     }
 
-    this._sort()
-
-    return this._queue.length
+    this.sort();
+    return this.queue.length;
   }
 
   /**
@@ -68,20 +66,20 @@ class PriorityQueue {
    *
    * @return {object} First priority queue entry
    */
-  next () {
-    const element = this._queue.shift()
+  next() {
+    const element = this.queue.shift();
 
     // Remove the key from the `_keys` set
-    this._keys.delete(element.key)
+    this.keys.delete(element.key);
 
-    return element
+    return element;
   }
 
   /**
    * @return {boolean} `true` when the queue is empty
    */
-  isEmpty () {
-    return Boolean(this._queue.length === 0)
+  isEmpty() {
+    return Boolean(this.queue.length === 0);
   }
 
   /**
@@ -90,8 +88,8 @@ class PriorityQueue {
    * @param {any} key   Key to lookup
    * @return {boolean}
    */
-  has (key) {
-    return this._keys.has(key)
+  has(key) {
+    return this.keys.has(key);
   }
 
   /**
@@ -100,10 +98,10 @@ class PriorityQueue {
    * @param {any} key   Key to lookup
    * @return {object}
    */
-  get (key) {
-    return this._queue.find(element => element.key === key)
+  get(key) {
+    return this.queue.find(element => element.key === key);
   }
 
 }
 
-module.exports = PriorityQueue
+module.exports = PriorityQueue;
