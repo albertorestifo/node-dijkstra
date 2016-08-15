@@ -23,18 +23,21 @@ function isValidNode(val) {
  */
 function toDeepMap(source) {
   const map = new Map();
+  const keys = Object.keys(source);
 
-  for (const key of source) {
+  keys.forEach((key) => {
     const val = source[key];
 
-    if (val !== null && typeof value === 'object' && !Array.is(val)) {
-      map.set(key, toDeepMap(val));
-    } else if (isValidNode(val)) {
-      map.set(key, val);
-    } else {
-      throw new Error(`Could not add node at key "${key}", make sure it's a valid node`);
+    if (val !== null && typeof val === 'object' && !Array.isArray(val)) {
+      return map.set(key, toDeepMap(val));
     }
-  }
+
+    if (!isValidNode(val)) {
+      throw new Error(`Could not add node at key "${key}", make sure it's a valid node`, val);
+    }
+
+    return map.set(key, Number(val));
+  });
 
   return map;
 }

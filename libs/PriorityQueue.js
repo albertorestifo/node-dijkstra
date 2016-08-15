@@ -47,9 +47,9 @@ class PriorityQueue {
       this.queue.push({ key, priority });
     } else {
       // Update the priority of an existing key
-      this.queue.map(element => {
+      this.queue.map((element) => {
         if (element.key === key) {
-          return Object.assing({}, element, { priority });
+          Object.assign(element, { priority });
         }
 
         return element;
