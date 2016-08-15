@@ -106,9 +106,34 @@ route.addNode('A', { B: 1 })
 route.addNode('B', { A: 1 }).addNode('C', { A: 3 });
 ```
 
-### `Graph#addVertex(name, edges)`
 
-**Deprecated:** Use `Graph#addNode` instead
+### `Graph#removeNode(name)`
+
+Removes a node and all it's references from the graph
+
+#### Parameters
+
+- `String name`: name of the node to remove
+
+#### Returns
+
+Returns `this` allowing chained calls.
+
+```js
+const route = new Graph({
+  a: { b: 3, c: 10 },
+  b: { a: 5, c: 2 },
+  c: { b: 1 },
+});
+
+route.removeNode('c');
+// => The graph now is:
+// {
+//   a: { b: 3 },
+//   b: { a: 5 },
+// }
+```
+
 
 ### `Graph#path(start, goal [, options])`
 
@@ -157,9 +182,6 @@ route.path('A', 'D', { cost: true })
 //    }
 ```
 
-### `Graph#shortestPath(origin, destination [, options])`
-
-**Deprecated:** Use `Graph#path` instead
 
 ## Upgrading from `v1`
 
