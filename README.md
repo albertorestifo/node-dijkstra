@@ -6,7 +6,7 @@
 
 ## Installation
 
-Since version 2 this plugin uses some ES6 features. You can run the latest version on **NodeJS `v4.0.0` or newer** and **iojs**
+Since version 2 this plugin uses some ES6 features. You can run the latest version on **NodeJS `v4.0.0` or newer**
 
 ```shell
 npm install node-dijkstra --save
@@ -45,7 +45,7 @@ route.path('A', 'D') // => [ 'A', 'B', 'C', 'D' ]
 
 #### Parameters
 
-- `Object nodes` _optional_: Initial nodes graph.
+- `Object|Map nodes` _optional_: Initial nodes graph.
 
 A nodes graph must follow this structure:
 
@@ -82,6 +82,24 @@ const route = new Graph({
 })
 ```
 
+It's possible to pass the constructor a deep `Map`. This allows using numbers as keys for the nodes.
+
+```js
+const graph = new Map()
+
+const a = new Map()
+a.set('B', 1)
+
+const b = new Map()
+b.set('A', 1)
+b.set('C', 2)
+b.set('D', 4)
+
+graph.set('A', a)
+graph.set('B', b);
+
+const route = new Graph(graph)
+```
 
 
 ### `Graph#addNode(name, edges)`
@@ -91,7 +109,7 @@ Add a node to the nodes graph
 #### Parameters
 
 - `String name`: name of the node
-- `Object edges`: object containing the name of the neighboring nodes and their cost
+- `Object|Map edges`: object or `Map` containing the name of the neighboring nodes and their cost
 
 #### Returns
 
@@ -104,6 +122,12 @@ route.addNode('A', { B: 1 })
 
 // chaining is possible
 route.addNode('B', { A: 1 }).addNode('C', { A: 3 });
+
+// passing a Map directly is possible
+const c = new Map()
+c.set('A', 4)
+
+route.addNode('C', c);
 ```
 
 
