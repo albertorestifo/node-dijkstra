@@ -27,6 +27,30 @@ describe('Graph', () => {
       const a = route.graph.get('a');
       demand(a).be.instanceOf(Map);
     });
+
+    it('accepts a Map as graph', () => {
+      const graph = new Map();
+      const a = new Map();
+      a.set('b', 1);
+      a.set('c', 2);
+      graph.set('a', a);
+
+      const route = new Graph(graph);
+
+      demand(route.graph.size).equal(1);
+    });
+
+    it('accepts numbers as key when in a map', () => {
+      const graph = new Map();
+      const a = new Map();
+      a.set(1, 1);
+      a.set(2, 2);
+      graph.set(1, a);
+
+      const route = new Graph(graph);
+
+      demand(route.graph.size).equal(1);
+    });
   });
 
   describe('#addNode()', () => {
@@ -46,6 +70,21 @@ describe('Graph', () => {
       const graph = new Graph();
 
       demand(graph.addNode('a', { b: 10, c: 20 })).be.instanceOf(Graph);
+    });
+
+    it('accepts a map', () => {
+      const route = new Graph();
+      const a = new Map();
+      a.set('b', 10);
+      a.set('c', 20);
+
+      route.addNode('a', a);
+
+      const node = route.graph.get('a');
+
+      demand(node).be.instanceOf(Map);
+      demand(node.get('b')).equal(10);
+      demand(node.get('c')).equal(20);
     });
   });
 
