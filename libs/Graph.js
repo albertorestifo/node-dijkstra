@@ -1,6 +1,7 @@
 const Queue = require('./PriorityQueue');
 const removeDeepFromMap = require('./removeDeepFromMap');
 const toDeepMap = require('./toDeepMap');
+const validateDeep = require('./validateDeep');
 
 /** Creates and manages a graph */
 class Graph {
@@ -18,7 +19,10 @@ class Graph {
    *       },
    *     }
    *
-   * @param {Object} [graph] - Initial graph definition
+   * In alternative to an object, you can pass a `Map` of `Map`. This will
+   * allow you to specify numbers as keys.
+   *
+   * @param {Objec|Map} [graph] - Initial graph definition
    * @example
    *
    * const route = new Graph();
@@ -28,16 +32,39 @@ class Graph {
    *   A: { B: 1 },
    *   B: { A: 1, C: 2, D: 4 },
    * });
+   *
+   * // Passing a Map
+   * const g = new Map()
+   *
+   * const a = new Map()
+   * a.set('B', 1)
+   *
+   * const b = new Map()
+   * b.set('A', 1)
+   * b.set('C', 2)
+   * b.set('D', 4)
+   *
+   * g.set('A', a)
+   * g.set('B', b)
+   *
+   * const route = new Graph(g)
    */
   constructor(graph) {
-    this.graph = graph ? toDeepMap(graph) : new Map();
+    if (graph instanceof Map) {
+      validateDeep(graph);
+      this.graph = graph;
+    } else if (graph) {
+      this.graph = toDeepMap(graph);
+    } else {
+      this.graph = new Map();
+    }
   }
 
   /**
    * Adds a node to the graph
    *
    * @param {string} name      - Name of the node
-   * @param {Object} neighbors - Neighbouring nodes and cost to reach them
+   * @param {Object|Map} neighbors - Neighbouring nodes and cost to reach them
    * @return {this}
    * @example
    *
@@ -49,9 +76,24 @@ class Graph {
    * route
    *   .addNode('B', { A: 1 })
    *   .addNode('C', { A: 3 });
+   *
+   * // The neighbors can be expressed in a Map
+   * const d = new Map()
+   * d.set('A', 2)
+   * d.set('B', 8)
+   *
+   * route.addNode('D', d)
    */
   addNode(name, neighbors) {
-    this.graph.set(name, toDeepMap(neighbors));
+    let nodes;
+    if (neighbors instanceof Map) {
+      validateDeep(neighbors);
+      nodes = neighbors;
+    } else {
+      nodes = toDeepMap(neighbors);
+    }
+
+    this.graph.set(name, nodes);
 
     return this;
   }
