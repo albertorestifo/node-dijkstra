@@ -1,6 +1,6 @@
 {
   "name": "node-dijkstra",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "A NodeJS implementation of Dijkstra's algorithm",
   "author": "Alberto Restifo <alberto.restifo@gmail.com>",
   "main": "libs/Graph.js",
@@ -41,6 +41,8 @@
   },
   "dependencies": {},
   "browserify": {
-    "transform": ["babelify"]
+    "transform": [
+      "babelify"
+    ]
   }
 }
