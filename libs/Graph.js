@@ -99,14 +99,14 @@ class Graph {
   }
 
   /**
-   * @deprecated since version 2.0, use `Graph#addNode` isntead
+   * @deprecated since version 2.0, use `Graph#addNode` instead
    */
   addVertex(name, neighbors) {
     return this.addNode(name, neighbors);
   }
 
   /**
-   * Removes a node and all it's referencies from the graph
+   * Removes a node and all of its references from the graph
    *
    * @param {string|number} key - Key of the node to remove from the graph
    * @return {this}
@@ -226,7 +226,7 @@ class Graph {
         const frontierPriority = frontier.get(nNode).priority;
         const nodeCost = node.priority + nCost;
 
-        // Othewhise we only update the cost of this node in the frontier when
+        // Otherwise we only update the cost of this node in the frontier when
         // it's below what's currently set
         if (nodeCost < frontierPriority) {
           previous.set(nNode, node.key);
@@ -273,7 +273,7 @@ class Graph {
   }
 
   /**
-   * @deprecated since version 2.0, use `Graph#path` isntead
+   * @deprecated since version 2.0, use `Graph#path` instead
    */
   shortestPath(...args) {
     return this.path(...args);
