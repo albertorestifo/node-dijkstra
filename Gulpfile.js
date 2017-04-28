@@ -10,7 +10,7 @@ const uglify = require('gulp-uglify');
 /**
  * Prepares the files for browser usage
  *
- *  - Boundle with browserify
+ *  - Bundle with browserify
  *  - Transpile with Babel
  *  - Minify with uglify
  */

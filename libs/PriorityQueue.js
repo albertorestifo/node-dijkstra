@@ -2,8 +2,8 @@
  * This very basic implementation of a priority queue is used to select the
  * next node of the graph to walk to.
  *
- * The queue is always sorted to have the least expensive node on top. Some
- * comodoty methods are also implemented.
+ * The queue is always sorted to have the least expensive node on top.
+ * Some helper methods are also implemented.
  *
  * You should **never** modify the queue directly, but only using the methods
  * provided by the class.
@@ -14,7 +14,7 @@ class PriorityQueue {
    * Creates a new empty priority queue
    */
   constructor() {
-    // The `keys` set is used to greately improve the speed at which we can
+    // The `keys` set is used to greatly improve the speed at which we can
     // check the presence of a value in the queue
     this.keys = new Set();
     this.queue = [];

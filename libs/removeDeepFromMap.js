@@ -1,10 +1,11 @@
 /**
- * Removes a key and all it's referencies form a map. This function oeprates withous side-effects
- * and returns a new map.
+ * Removes a key and all of its references from a map.
+ * This function has no side-effects as it returns
+ * a brand new map.
  *
  * @param {Map}     map - Map to remove the key from
  * @param {string}  key - Key to remove from the map
- * @return {Map} New map without the passed key
+ * @return {Map}    New map without the passed key
  */
 function removeDeepFromMap(map, key) {
   const newMap = new Map();
