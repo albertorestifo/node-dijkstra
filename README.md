@@ -171,6 +171,7 @@ route.removeNode('c');
   - `Boolean cost`, default `false`: If set to true, an object will be returned with the following keys:
     - `Array path`: Computed path (subject to other options)
     - `Number cost`: Total cost for the found path
+  - `Array avoid`, default `[]`: Nodes to be avoided
 
 #### Returns
 
