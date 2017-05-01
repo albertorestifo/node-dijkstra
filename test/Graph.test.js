@@ -214,6 +214,62 @@ describe('Graph', () => {
       res.cost.must.equal(0);
     });
 
+    it('returns the same path if a node which is not part of the shortest path is avoided',
+    () => {
+      const route = new Graph({
+        a: { b: 1 },
+        b: { a: 1, c: 1 },
+        c: { b: 1, d: 1 },
+        d: { c: 1 },
+      });
+
+      const path = route.path('a', 'c', { cost: true });
+      const path2 = route.path('a', 'c', { avoid: ['d'], cost: true });
+
+      path.must.eql(path2);
+    });
+
+    it('returns a different path if a node which is part of the shortest path is avoided',
+    () => {
+      const route = new Graph({
+        a: { b: 1, c: 50 },
+        b: { a: 1, c: 1 },
+        c: { a: 50, b: 1, d: 1 },
+        d: { c: 1 },
+      });
+
+      const res = route.path('a', 'd', { cost: true });
+      const res2 = route.path('a', 'd', { avoid: ['b'], cost: true });
+
+      res.path.must.not.eql(res.path2);
+      res.cost.must.be.at.most(res2.cost);
+    });
+
+    it('throws an error if the start node is avoided',
+    () => {
+      const route = new Graph(vertices);
+
+      demand(() => route.path('a', 'c', { avoid: ['a'] })).throw(Error);
+    });
+
+    it('throws an error if the end node is avoided',
+    () => {
+      const route = new Graph(vertices);
+
+      demand(() => route.path('a', 'c', { avoid: ['c'] })).throw(Error);
+    });
+
+    it('returns the same path and cost if a node which is not part of the graph is avoided',
+    () => {
+      const route = new Graph(vertices);
+
+      const res = route.path('a', 'c', { cost: true });
+      const res2 = route.path('a', 'c', { avoid: ['z'], cost: true });
+
+      res.path.must.eql(res2.path);
+      res.cost.must.equal(res2.cost);
+    });
+
     it('works with a more complicated graph', () => {
       const route = new Graph({
         a: { b: 7, c: 9, f: 14 },
