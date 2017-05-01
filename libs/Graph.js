@@ -184,6 +184,9 @@ class Graph {
     let path = [];
     let totalCost = 0;
 
+    let avoid = [];
+    if (options.avoid && Array.isArray(options.avoid)) avoid = options.avoid;
+
     // Add the starting point to the frontier, it will be the first node visited
     frontier.set(start, 0);
 
@@ -213,8 +216,8 @@ class Graph {
       // Loop all the neighboring nodes
       const neighbors = this.graph.get(node.key) || new Map();
       neighbors.forEach((nCost, nNode) => {
-        // If we already explored the node, skip it
-        if (explored.has(nNode)) return null;
+        // If we already explored the node, or the node is to be avoided, skip it
+        if (explored.has(nNode) || avoid.includes(nNode)) return null;
 
         // If the neighboring node is not yet in the frontier, we add it with
         // the correct cost
