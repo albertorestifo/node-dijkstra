@@ -214,7 +214,7 @@ describe('Graph', () => {
       res.cost.must.equal(0);
     });
 
-    it('returns the same path regardless of whether a node which is not part of the calculated shortest path is avoided',
+    it('returns the same path if a node which is not part of the shortest path is avoided',
     () => {
       const route = new Graph({
         a: { b: 1 },
@@ -229,7 +229,7 @@ describe('Graph', () => {
       path.must.eql(path2);
     });
 
-    it('returns a different path if a node which is part of the calculated shortest path is avoided',
+    it('returns a different path if a node which is part of the shortest path is avoided',
     () => {
       const route = new Graph({
         a: { b: 1, c: 50 },
@@ -270,7 +270,7 @@ describe('Graph', () => {
       const res = route.path('a', 'c', { cost: true });
       const res2 = route.path('a', 'c', { avoid: ['z'], cost: true });
 
-      res.path.must.eql(res.path2);
+      res.path.must.eql(res2.path);
       res.cost.must.equal(res2.cost);
     });
 
