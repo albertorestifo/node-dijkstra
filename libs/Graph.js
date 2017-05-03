@@ -185,7 +185,13 @@ class Graph {
     let totalCost = 0;
 
     let avoid = [];
-    if (options.avoid && Array.isArray(options.avoid)) avoid = options.avoid;
+    if (options.avoid) avoid = [].concat(options.avoid);
+
+    if (avoid.includes(start)) {
+      throw new Error(`Starting node (${start}) cannot be avoided`);
+    } else if (avoid.includes(goal)) {
+      throw new Error(`Ending node (${goal}) cannot be avoided`);
+    }
 
     // Add the starting point to the frontier, it will be the first node visited
     frontier.set(start, 0);
