@@ -166,11 +166,12 @@ route.removeNode('c');
 - `String start`: Name of the starting node
 - `String goal`: Name of out goal node
 - `Object options` _optional_: Addittional options:
-  - `Boolean trim`, deafult `false`: If set to true, the result won't include the start and goal nodes
+  - `Boolean trim`, default `false`: If set to true, the result won't include the start and goal nodes
   - `Boolean reverse`, default `false`: If set to true, the result will be in reverse order, from goal to start
   - `Boolean cost`, default `false`: If set to true, an object will be returned with the following keys:
     - `Array path`: Computed path (subject to other options)
     - `Number cost`: Total cost for the found path
+  - `Array avoid`, default `[]`: Nodes to be avoided
 
 #### Returns
 
