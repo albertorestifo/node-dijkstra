@@ -16,6 +16,21 @@ function isValidNode(val) {
 }
 
 /**
+ * Returns object properties with symbol keys
+ *
+ * @param {Object} source - Object
+ * @return {Keys} List of object keys with symbols keys included
+ */
+function getObjectKeysWithSymbols(source) {
+  const keys = Object.keys(source);
+  const symbols = (typeof Object.getOwnPropertySymbols === 'function')
+    ? Object.getOwnPropertySymbols(source)
+    : [];
+
+  return keys.concat(symbols);
+}
+
+/**
  * Creates a deep `Map` from the passed object.
  *
  * @param  {Object} source - Object to populate the map with
@@ -23,7 +38,7 @@ function isValidNode(val) {
  */
 function toDeepMap(source) {
   const map = new Map();
-  const keys = Object.keys(source);
+  const keys = getObjectKeysWithSymbols(source);
 
   keys.forEach((key) => {
     const val = source[key];
@@ -31,6 +46,7 @@ function toDeepMap(source) {
     if (val !== null && typeof val === 'object' && !Array.isArray(val)) {
       return map.set(key, toDeepMap(val));
     }
+
 
     if (!isValidNode(val)) {
       throw new Error(`Could not add node at key "${key}", make sure it's a valid node`, val);
