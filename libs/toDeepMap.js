@@ -8,6 +8,10 @@
 function isValidNode(val) {
   const cost = Number(val);
 
+  if (typeof val === 'function') {
+    return true;
+  }
+
   if (isNaN(cost) || cost <= 0) {
     return false;
   }
@@ -52,7 +56,7 @@ function toDeepMap(source) {
       throw new Error(`Could not add node at key "${key}", make sure it's a valid node`, val);
     }
 
-    return map.set(key, Number(val));
+    return map.set(key, (typeof val === 'function') ? val : Number(val));
   });
 
   return map;

@@ -3,6 +3,12 @@ const removeDeepFromMap = require('./removeDeepFromMap');
 const toDeepMap = require('./toDeepMap');
 const validateDeep = require('./validateDeep');
 
+function evaluatePriority(priority) {
+  return (typeof priority === 'function')
+    ? priority()
+    : priority;
+}
+
 /** Creates and manages a graph */
 class Graph {
 
@@ -200,12 +206,13 @@ class Graph {
     while (!frontier.isEmpty()) {
       // Get the node in the frontier with the lowest cost (`priority`)
       const node = frontier.next();
+      const nodePriority = evaluatePriority(node.priority);
 
       // When the node with the lowest cost in the frontier in our goal node,
       // we can compute the path and exit the loop
       if (node.key === goal) {
         // Set the total cost to the current value
-        totalCost = node.priority;
+        totalCost = nodePriority;
 
         let nodeKey = node.key;
         while (previous.has(nodeKey)) {
@@ -229,11 +236,12 @@ class Graph {
         // the correct cost
         if (!frontier.has(nNode)) {
           previous.set(nNode, node.key);
-          return frontier.set(nNode, node.priority + nCost);
+
+          return frontier.set(nNode, nodePriority + evaluatePriority(nCost));
         }
 
-        const frontierPriority = frontier.get(nNode).priority;
-        const nodeCost = node.priority + nCost;
+        const frontierPriority = evaluatePriority(frontier.get(nNode).priority);
+        const nodeCost = nodePriority + evaluatePriority(nCost);
 
         // Otherwise we only update the cost of this node in the frontier when
         // it's below what's currently set
