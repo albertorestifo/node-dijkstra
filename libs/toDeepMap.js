@@ -8,11 +8,30 @@
 function isValidNode(val) {
   const cost = Number(val);
 
+  if (typeof val === 'function') {
+    return true;
+  }
+
   if (isNaN(cost) || cost <= 0) {
     return false;
   }
 
   return true;
+}
+
+/**
+ * Returns object properties with symbol keys
+ *
+ * @param {Object} source - Object
+ * @return {Keys} List of object keys with symbols keys included
+ */
+function getObjectKeysWithSymbols(source) {
+  const keys = Object.keys(source);
+  const symbols = (typeof Object.getOwnPropertySymbols === 'function')
+    ? Object.getOwnPropertySymbols(source)
+    : [];
+
+  return keys.concat(symbols);
 }
 
 /**
@@ -23,7 +42,7 @@ function isValidNode(val) {
  */
 function toDeepMap(source) {
   const map = new Map();
-  const keys = Object.keys(source);
+  const keys = getObjectKeysWithSymbols(source);
 
   keys.forEach((key) => {
     const val = source[key];
@@ -32,11 +51,12 @@ function toDeepMap(source) {
       return map.set(key, toDeepMap(val));
     }
 
+
     if (!isValidNode(val)) {
       throw new Error(`Could not add node at key "${key}", make sure it's a valid node`, val);
     }
 
-    return map.set(key, Number(val));
+    return map.set(key, (typeof val === 'function') ? val : Number(val));
   });
 
   return map;
