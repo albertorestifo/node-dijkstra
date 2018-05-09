@@ -11,7 +11,7 @@
   "scripts": {
     "test": "eslint . && istanbul cover _mocha -- --ui bdd -R spec -t 5000",
     "compile": "gulp build",
-    "preinstall": "babel libs/ --out-dir dist/"
+    "build": "babel libs/ --out-dir dist/"
   },
   "bugs": {
     "url": "https://github.com/albertorestifo/node-dijkstra/issues"
