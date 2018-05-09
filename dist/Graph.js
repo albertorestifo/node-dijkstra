@@ -1,10 +1,17 @@
-const Queue = require('./PriorityQueue');
-const removeDeepFromMap = require('./removeDeepFromMap');
-const toDeepMap = require('./toDeepMap');
-const validateDeep = require('./validateDeep');
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Queue = require('./PriorityQueue');
+var removeDeepFromMap = require('./removeDeepFromMap');
+var toDeepMap = require('./toDeepMap');
+var validateDeep = require('./validateDeep');
 
 /** Creates and manages a graph */
-class Graph {
+
+var Graph = function () {
 
   /**
    * Creates a new Graph, optionally initializing it a nodes graph representation.
@@ -49,7 +56,9 @@ class Graph {
    *
    * const route = new Graph(g)
    */
-  constructor(graph) {
+  function Graph(graph) {
+    _classCallCheck(this, Graph);
+
     if (graph instanceof Map) {
       validateDeep(graph);
       this.graph = graph;
@@ -84,210 +93,239 @@ class Graph {
    *
    * route.addNode('D', d)
    */
-  addNode(name, neighbors) {
-    let nodes;
-    if (neighbors instanceof Map) {
-      validateDeep(neighbors);
-      nodes = neighbors;
-    } else {
-      nodes = toDeepMap(neighbors);
-    }
 
-    this.graph.set(name, nodes);
 
-    return this;
-  }
-
-  /**
-   * @deprecated since version 2.0, use `Graph#addNode` instead
-   */
-  addVertex(name, neighbors) {
-    return this.addNode(name, neighbors);
-  }
-
-  /**
-   * Removes a node and all of its references from the graph
-   *
-   * @param {string|number} key - Key of the node to remove from the graph
-   * @return {this}
-   * @example
-   *
-   * const route = new Graph({
-   *   A: { B: 1, C: 5 },
-   *   B: { A: 3 },
-   *   C: { B: 2, A: 2 },
-   * });
-   *
-   * route.removeNode('C');
-   * // The graph now is:
-   * // { A: { B: 1 }, B: { A: 3 } }
-   */
-  removeNode(key) {
-    this.graph = removeDeepFromMap(this.graph, key);
-
-    return this;
-  }
-
-  /**
-   * Compute the shortest path between the specified nodes
-   *
-   * @param {string}  start     - Starting node
-   * @param {string}  goal      - Node we want to reach
-   * @param {object}  [options] - Options
-   *
-   * @param {boolean} [options.trim]    - Exclude the origin and destination nodes from the result
-   * @param {boolean} [options.reverse] - Return the path in reversed order
-   * @param {boolean} [options.cost]    - Also return the cost of the path when set to true
-   *
-   * @return {array|object} Computed path between the nodes.
-   *
-   *  When `option.cost` is set to true, the returned value will be an object with shape:
-   *    - `path` *(Array)*: Computed path between the nodes
-   *    - `cost` *(Number)*: Cost of the path
-   *
-   * @example
-   *
-   * const route = new Graph()
-   *
-   * route.addNode('A', { B: 1 })
-   * route.addNode('B', { A: 1, C: 2, D: 4 })
-   * route.addNode('C', { B: 2, D: 1 })
-   * route.addNode('D', { C: 1, B: 4 })
-   *
-   * route.path('A', 'D') // => ['A', 'B', 'C', 'D']
-   *
-   * // trimmed
-   * route.path('A', 'D', { trim: true }) // => [B', 'C']
-   *
-   * // reversed
-   * route.path('A', 'D', { reverse: true }) // => ['D', 'C', 'B', 'A']
-   *
-   * // include the cost
-   * route.path('A', 'D', { cost: true })
-   * // => {
-   * //       path: [ 'A', 'B', 'C', 'D' ],
-   * //       cost: 4
-   * //    }
-   */
-  path(start, goal, options = {}) {
-    // Don't run when we don't have nodes set
-    if (!this.graph.size) {
-      if (options.cost) return { path: null, cost: 0 };
-
-      return null;
-    }
-
-    const explored = new Set();
-    const frontier = new Queue();
-    const previous = new Map();
-
-    let path = [];
-    let totalCost = 0;
-
-    let avoid = [];
-    if (options.avoid) avoid = [].concat(options.avoid);
-
-    if (avoid.includes(start)) {
-      throw new Error(`Starting node (${start}) cannot be avoided`);
-    } else if (avoid.includes(goal)) {
-      throw new Error(`Ending node (${goal}) cannot be avoided`);
-    }
-
-    // Add the starting point to the frontier, it will be the first node visited
-    frontier.set(start, 0);
-
-    // Run until we have visited every node in the frontier
-    while (!frontier.isEmpty()) {
-      // Get the node in the frontier with the lowest cost (`priority`)
-      const node = frontier.next();
-
-      // When the node with the lowest cost in the frontier in our goal node,
-      // we can compute the path and exit the loop
-      if (node.key === goal) {
-        // Set the total cost to the current value
-        totalCost = node.priority;
-
-        let nodeKey = node.key;
-        while (previous.has(nodeKey)) {
-          path.push(nodeKey);
-          nodeKey = previous.get(nodeKey);
-        }
-
-        break;
+  _createClass(Graph, [{
+    key: 'addNode',
+    value: function addNode(name, neighbors) {
+      var nodes = void 0;
+      if (neighbors instanceof Map) {
+        validateDeep(neighbors);
+        nodes = neighbors;
+      } else {
+        nodes = toDeepMap(neighbors);
       }
 
-      // Add the current node to the explored set
-      explored.add(node.key);
+      this.graph.set(name, nodes);
 
-      // Loop all the neighboring nodes
-      const neighbors = this.graph.get(node.key) || new Map();
-      neighbors.forEach((nCost, nNode) => {
-        // If we already explored the node, or the node is to be avoided, skip it
-        if (explored.has(nNode) || avoid.includes(nNode)) return null;
+      return this;
+    }
 
-        // If the neighboring node is not yet in the frontier, we add it with
-        // the correct cost
-        if (!frontier.has(nNode)) {
-          previous.set(nNode, node.key);
-          return frontier.set(nNode, node.priority + nCost);
-        }
+    /**
+     * @deprecated since version 2.0, use `Graph#addNode` instead
+     */
 
-        const frontierPriority = frontier.get(nNode).priority;
-        const nodeCost = node.priority + nCost;
+  }, {
+    key: 'addVertex',
+    value: function addVertex(name, neighbors) {
+      return this.addNode(name, neighbors);
+    }
 
-        // Otherwise we only update the cost of this node in the frontier when
-        // it's below what's currently set
-        if (nodeCost < frontierPriority) {
-          previous.set(nNode, node.key);
-          return frontier.set(nNode, nodeCost);
-        }
+    /**
+     * Removes a node and all of its references from the graph
+     *
+     * @param {string|number} key - Key of the node to remove from the graph
+     * @return {this}
+     * @example
+     *
+     * const route = new Graph({
+     *   A: { B: 1, C: 5 },
+     *   B: { A: 3 },
+     *   C: { B: 2, A: 2 },
+     * });
+     *
+     * route.removeNode('C');
+     * // The graph now is:
+     * // { A: { B: 1 }, B: { A: 3 } }
+     */
+
+  }, {
+    key: 'removeNode',
+    value: function removeNode(key) {
+      this.graph = removeDeepFromMap(this.graph, key);
+
+      return this;
+    }
+
+    /**
+     * Compute the shortest path between the specified nodes
+     *
+     * @param {string}  start     - Starting node
+     * @param {string}  goal      - Node we want to reach
+     * @param {object}  [options] - Options
+     *
+     * @param {boolean} [options.trim]    - Exclude the origin and destination nodes from the result
+     * @param {boolean} [options.reverse] - Return the path in reversed order
+     * @param {boolean} [options.cost]    - Also return the cost of the path when set to true
+     *
+     * @return {array|object} Computed path between the nodes.
+     *
+     *  When `option.cost` is set to true, the returned value will be an object with shape:
+     *    - `path` *(Array)*: Computed path between the nodes
+     *    - `cost` *(Number)*: Cost of the path
+     *
+     * @example
+     *
+     * const route = new Graph()
+     *
+     * route.addNode('A', { B: 1 })
+     * route.addNode('B', { A: 1, C: 2, D: 4 })
+     * route.addNode('C', { B: 2, D: 1 })
+     * route.addNode('D', { C: 1, B: 4 })
+     *
+     * route.path('A', 'D') // => ['A', 'B', 'C', 'D']
+     *
+     * // trimmed
+     * route.path('A', 'D', { trim: true }) // => [B', 'C']
+     *
+     * // reversed
+     * route.path('A', 'D', { reverse: true }) // => ['D', 'C', 'B', 'A']
+     *
+     * // include the cost
+     * route.path('A', 'D', { cost: true })
+     * // => {
+     * //       path: [ 'A', 'B', 'C', 'D' ],
+     * //       cost: 4
+     * //    }
+     */
+
+  }, {
+    key: 'path',
+    value: function path(start, goal) {
+      var _this = this;
+
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      // Don't run when we don't have nodes set
+      if (!this.graph.size) {
+        if (options.cost) return { path: null, cost: 0 };
 
         return null;
-      });
-    }
+      }
 
-    // Return null when no path can be found
-    if (!path.length) {
-      if (options.cost) return { path: null, cost: 0 };
+      var explored = new Set();
+      var frontier = new Queue();
+      var previous = new Map();
 
-      return null;
-    }
+      var path = [];
+      var totalCost = 0;
 
-    // From now on, keep in mind that `path` is populated in reverse order,
-    // from destination to origin
+      var avoid = [];
+      if (options.avoid) avoid = [].concat(options.avoid);
 
-    // Remove the first value (the goal node) if we want a trimmed result
-    if (options.trim) {
-      path.shift();
-    } else {
-      // Add the origin waypoint at the end of the array
-      path = path.concat([start]);
-    }
+      if (avoid.includes(start)) {
+        throw new Error('Starting node (' + start + ') cannot be avoided');
+      } else if (avoid.includes(goal)) {
+        throw new Error('Ending node (' + goal + ') cannot be avoided');
+      }
 
-    // Reverse the path if we don't want it reversed, so the result will be
-    // from `start` to `goal`
-    if (!options.reverse) {
-      path = path.reverse();
-    }
+      // Add the starting point to the frontier, it will be the first node visited
+      frontier.set(start, 0);
 
-    // Return an object if we also want the cost
-    if (options.cost) {
-      return {
-        path,
-        cost: totalCost
+      // Run until we have visited every node in the frontier
+
+      var _loop = function _loop() {
+        // Get the node in the frontier with the lowest cost (`priority`)
+        var node = frontier.next();
+
+        // When the node with the lowest cost in the frontier in our goal node,
+        // we can compute the path and exit the loop
+        if (node.key === goal) {
+          // Set the total cost to the current value
+          totalCost = node.priority;
+
+          var nodeKey = node.key;
+          while (previous.has(nodeKey)) {
+            path.push(nodeKey);
+            nodeKey = previous.get(nodeKey);
+          }
+
+          return 'break';
+        }
+
+        // Add the current node to the explored set
+        explored.add(node.key);
+
+        // Loop all the neighboring nodes
+        var neighbors = _this.graph.get(node.key) || new Map();
+        neighbors.forEach(function (nCost, nNode) {
+          // If we already explored the node, or the node is to be avoided, skip it
+          if (explored.has(nNode) || avoid.includes(nNode)) return null;
+
+          // If the neighboring node is not yet in the frontier, we add it with
+          // the correct cost
+          if (!frontier.has(nNode)) {
+            previous.set(nNode, node.key);
+            return frontier.set(nNode, node.priority + nCost);
+          }
+
+          var frontierPriority = frontier.get(nNode).priority;
+          var nodeCost = node.priority + nCost;
+
+          // Otherwise we only update the cost of this node in the frontier when
+          // it's below what's currently set
+          if (nodeCost < frontierPriority) {
+            previous.set(nNode, node.key);
+            return frontier.set(nNode, nodeCost);
+          }
+
+          return null;
+        });
       };
+
+      while (!frontier.isEmpty()) {
+        var _ret = _loop();
+
+        if (_ret === 'break') break;
+      }
+
+      // Return null when no path can be found
+      if (!path.length) {
+        if (options.cost) return { path: null, cost: 0 };
+
+        return null;
+      }
+
+      // From now on, keep in mind that `path` is populated in reverse order,
+      // from destination to origin
+
+      // Remove the first value (the goal node) if we want a trimmed result
+      if (options.trim) {
+        path.shift();
+      } else {
+        // Add the origin waypoint at the end of the array
+        path = path.concat([start]);
+      }
+
+      // Reverse the path if we don't want it reversed, so the result will be
+      // from `start` to `goal`
+      if (!options.reverse) {
+        path = path.reverse();
+      }
+
+      // Return an object if we also want the cost
+      if (options.cost) {
+        return {
+          path: path,
+          cost: totalCost
+        };
+      }
+
+      return path;
     }
 
-    return path;
-  }
+    /**
+     * @deprecated since version 2.0, use `Graph#path` instead
+     */
 
-  /**
-   * @deprecated since version 2.0, use `Graph#path` instead
-   */
-  shortestPath(...args) {
-    return this.path(...args);
-  }
+  }, {
+    key: 'shortestPath',
+    value: function shortestPath() {
+      return this.path.apply(this, arguments);
+    }
+  }]);
 
-}
+  return Graph;
+}();
 
 module.exports = Graph;
