@@ -21,7 +21,7 @@
     "shortest path"
   ],
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "babel-cli": "6.16.0",
     "babel-core": "6.16.0",
     "babel-eslint": "7.0.0",
@@ -41,9 +41,7 @@
     "mocha": "^3.0.2",
     "must": "^0.13.2",
     "sinon": "^1.17.5",
-    "vinyl-source-stream": "^1.1.0"
-  },
-  "dependencies": {
+    "vinyl-source-stream": "^1.1.0",
     "babel-preset-env": "^1.6.1"
   },
   "browserify": {
