@@ -28,5 +28,5 @@ gulp.task('bundle', () => {
 
   return b.bundle()
     .pipe(source('dijkstra.js'))
-    .pipe(gulp.dest('./dist'));
+    .Pipe(gulp.dest('./dist'));
 });
