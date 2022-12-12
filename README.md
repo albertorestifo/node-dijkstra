@@ -1,6 +1,6 @@
 # node-dijkstra
 
-[![Build Status](https://travis-ci.org/albertorestifo/node-dijkstra.svg?branch=harmony)](https://travis-ci.org/albertorestifo/node-dijkstra) [![codecov.io](http://codecov.io/github/albertorestifo/node-dijkstra/coverage.svg?branch=master)](http://codecov.io/github/albertorestifo/node-dijkstra?branch=master)
+[![Unit Tests](https://github.com/albertorestifo/node-dijkstra/actions/workflows/test.yml/badge.svg)](https://github.com/albertorestifo/node-dijkstra/actions/workflows/test.yml) [![codecov.io](http://codecov.io/github/albertorestifo/node-dijkstra/coverage.svg?branch=master)](http://codecov.io/github/albertorestifo/node-dijkstra?branch=master)
 
 > Fast JavaScript implementation of the Dijkstra's shortest path problem for NodeJS
 
