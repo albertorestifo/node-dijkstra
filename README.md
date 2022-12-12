@@ -1,8 +1,8 @@
 # node-dijkstra
 
-[![Build Status](https://travis-ci.org/albertorestifo/node-dijkstra.svg?branch=harmony)](https://travis-ci.org/albertorestifo/node-dijkstra) [![codecov.io](http://codecov.io/github/albertorestifo/node-dijkstra/coverage.svg?branch=master)](http://codecov.io/github/albertorestifo/node-dijkstra?branch=master) [![Dependency Status](https://david-dm.org/albertorestifo/node-dijkstra.svg)](https://david-dm.org/albertorestifo/node-dijkstra)
+[![Unit Tests](https://github.com/albertorestifo/node-dijkstra/actions/workflows/test.yml/badge.svg)](https://github.com/albertorestifo/node-dijkstra/actions/workflows/test.yml) [![codecov.io](http://codecov.io/github/albertorestifo/node-dijkstra/coverage.svg?branch=master)](http://codecov.io/github/albertorestifo/node-dijkstra?branch=master)
 
-> Fast JavaScript implementation of the  Dijkstra's shortest path problem for NodeJS
+> Fast JavaScript implementation of the Dijkstra's shortest path problem for NodeJS
 
 ## Installation
 
@@ -27,16 +27,16 @@ You can then refer to the [`v1.1.3` documentation](https://github.com/albertores
 Basic example:
 
 ```js
-const Graph = require('node-dijkstra')
+const Graph = require("node-dijkstra");
 
-const route = new Graph()
+const route = new Graph();
 
-route.addNode('A', { B:1 })
-route.addNode('B', { A:1, C:2, D: 4 })
-route.addNode('C', { B:2, D:1 })
-route.addNode('D', { C:1, B:4 })
+route.addNode("A", { B: 1 });
+route.addNode("B", { A: 1, C: 2, D: 4 });
+route.addNode("C", { B: 2, D: 1 });
+route.addNode("D", { C: 1, B: 4 });
 
-route.path('A', 'D') // => [ 'A', 'B', 'C', 'D' ]
+route.path("A", "D"); // => [ 'A', 'B', 'C', 'D' ]
 ```
 
 ## API
@@ -73,34 +73,33 @@ A nodes graph must follow this structure:
 #### Example
 
 ```js
-const route = new Graph()
+const route = new Graph();
 
 // or with pre-populated graph
 const route = new Graph({
-  'A': { 'B': 1 },
-  'B': { 'A': 1, 'C': 2, 'D': 4 }
-})
+  A: { B: 1 },
+  B: { A: 1, C: 2, D: 4 },
+});
 ```
 
 It's possible to pass the constructor a deep `Map`. This allows using numbers as keys for the nodes.
 
 ```js
-const graph = new Map()
+const graph = new Map();
 
-const a = new Map()
-a.set('B', 1)
+const a = new Map();
+a.set("B", 1);
 
-const b = new Map()
-b.set('A', 1)
-b.set('C', 2)
-b.set('D', 4)
+const b = new Map();
+b.set("A", 1);
+b.set("C", 2);
+b.set("D", 4);
 
-graph.set('A', a)
-graph.set('B', b);
+graph.set("A", a);
+graph.set("B", b);
 
-const route = new Graph(graph)
+const route = new Graph(graph);
 ```
-
 
 ### `Graph#addNode(name, edges)`
 
@@ -116,20 +115,19 @@ Add a node to the nodes graph
 Returns `this` allowing chained calls.
 
 ```js
-const route = new Graph()
+const route = new Graph();
 
-route.addNode('A', { B: 1 })
+route.addNode("A", { B: 1 });
 
 // chaining is possible
-route.addNode('B', { A: 1 }).addNode('C', { A: 3 });
+route.addNode("B", { A: 1 }).addNode("C", { A: 3 });
 
 // passing a Map directly is possible
-const c = new Map()
-c.set('A', 4)
+const c = new Map();
+c.set("A", 4);
 
-route.addNode('C', c);
+route.addNode("C", c);
 ```
-
 
 ### `Graph#removeNode(name)`
 
@@ -150,14 +148,13 @@ const route = new Graph({
   c: { b: 1 },
 });
 
-route.removeNode('c');
+route.removeNode("c");
 // => The graph now is:
 // {
 //   a: { b: 3 },
 //   b: { a: 5 },
 // }
 ```
-
 
 ### `Graph#path(start, goal [, options])`
 
@@ -182,38 +179,36 @@ If `options.cost` is `true`, an `Object` with keys `path` and `cost` will be ret
 When to route can be found, the path will be set to `null`.
 
 ```js
-const Graph = require('node-dijkstra')
+const Graph = require("node-dijkstra");
 
-const route = new Graph()
+const route = new Graph();
 
-route.addNode('A', { B: 1 })
-route.addNode('B', { A: 1, C: 2, D: 4 })
-route.addNode('C', { B: 2, D: 1 })
-route.addNode('D', { C: 1, B: 4 })
+route.addNode("A", { B: 1 });
+route.addNode("B", { A: 1, C: 2, D: 4 });
+route.addNode("C", { B: 2, D: 1 });
+route.addNode("D", { C: 1, B: 4 });
 
-route.path('A', 'D') // => ['A', 'B', 'C', 'D']
+route.path("A", "D"); // => ['A', 'B', 'C', 'D']
 
 // trimmed
-route.path('A', 'D', { trim: true }) // => [B', 'C']
+route.path("A", "D", { trim: true }); // => [B', 'C']
 
 // reversed
-route.path('A', 'D', { reverse: true }) // => ['D', 'C', 'B', 'A']
+route.path("A", "D", { reverse: true }); // => ['D', 'C', 'B', 'A']
 
 // include the cost
-route.path('A', 'D', { cost: true })
+route.path("A", "D", { cost: true });
 // => {
 //       path: [ 'A', 'B', 'C', 'D' ],
 //       cost: 4
 //    }
 ```
 
-
 ## Upgrading from `v1`
 
 - The `v2` release in not compatible with NodeJS prior to the version 4.0
 - The method `Graph#shortestPath` has been deprecated, use `Graph#path` instead
 - The method `Graph#addVertex` has been deprecated, use `Graph#addNode` instead
-
 
 ## Testing
 
@@ -222,6 +217,5 @@ npm test
 ```
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-
 
 [1]: https://github.com/andrewhayward/dijkstra
