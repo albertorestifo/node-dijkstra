@@ -1,11 +1,10 @@
-const Queue = require('./PriorityQueue');
-const removeDeepFromMap = require('./removeDeepFromMap');
-const toDeepMap = require('./toDeepMap');
-const validateDeep = require('./validateDeep');
+const Queue = require("./PriorityQueue");
+const removeDeepFromMap = require("./removeDeepFromMap");
+const toDeepMap = require("./toDeepMap");
+const validateDeep = require("./validateDeep");
 
 /** Creates and manages a graph */
 class Graph {
-
   /**
    * Creates a new Graph, optionally initializing it a nodes graph representation.
    *
@@ -287,7 +286,6 @@ class Graph {
   shortestPath(...args) {
     return this.path(...args);
   }
-
 }
 
 module.exports = Graph;
