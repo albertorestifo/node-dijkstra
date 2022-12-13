@@ -43,12 +43,14 @@ describe("validateDeep()", () => {
     demand(validateDeep.bind(this, m)).to.throw(Error, /must be numbers/);
   });
 
-  it('rejects graphs not of type Map', () => {
-    demand(validateDeep.bind(this, undefined))
-      .to.throw(Error, /Expected Map instead/);
+  it("rejects graphs not of type Map", () => {
+    demand(validateDeep.bind(this, undefined)).to.throw(
+      Error,
+      /Expected Map instead/
+    );
   });
 
-  it('accepts 0.02', () => {
+  it("accepts 0.02", () => {
     const m = new Map();
     const a = new Map();
     a.set("a", 0.02);
