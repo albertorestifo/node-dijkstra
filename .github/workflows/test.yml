@@ -25,7 +25,7 @@ jobs:
 
       - run: npm ci
 
-      - run: npm test
+      - run: npm test -- --coverage
 
       - uses: codecov/codecov-action@v3
         with:
