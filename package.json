@@ -9,7 +9,7 @@
     "url": "https://github.com/albertorestifo/node-dijkstra"
   },
   "scripts": {
-    "test": "eslint . && istanbul cover _mocha -- --ui bdd -R spec -t 5000",
+    "test": "eslint . && nyc --reporter=html mocha -t 5000",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "compile": "gulp build"
@@ -35,9 +35,9 @@
     "gulp-babel": "^8.0.0",
     "gulp-rename": "^2.0.0",
     "gulp-uglify": "^3.0.2",
-    "istanbul": "^0.4.5",
     "mocha": "^10.2.0",
     "must": "^0.13.4",
+    "nyc": "^15.1.0",
     "sinon": "^15.0.0",
     "vinyl-source-stream": "^2.0.0"
   },
