@@ -1,3 +1,7 @@
 {
-  "extends": "airbnb"
+    "extends": ["plugin:import/recommended", "plugin:jsx-a11y/recommended", "prettier"],
+    "plugins": ["import", "jsx-a11y", "prettier"],
+    "rules": {
+      "prettier/prettier": ["error"]
+    }
 }

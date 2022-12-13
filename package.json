@@ -9,7 +9,9 @@
     "url": "https://github.com/albertorestifo/node-dijkstra"
   },
   "scripts": {
-    "test": "eslint . && istanbul cover _mocha -- --ui bdd -R spec -t 5000",
+    "test": "eslint . && nyc --reporter=html mocha -t 5000",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "compile": "gulp build"
   },
   "bugs": {
@@ -21,25 +23,24 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "babel-eslint": "^6.1.2",
-    "browserify": "^13.1.0",
-    "codecov.io": "^0.1.6",
-    "eslint": "^3.3.0",
-    "eslint-config-airbnb": "^10.0.1",
-    "eslint-plugin-import": "^1.13.0",
-    "eslint-plugin-jsx-a11y": "^2.1.0",
-    "eslint-plugin-react": "^6.1.0",
+    "@babel/core": "^7.20.5",
+    "@babel/eslint-parser": "^7.19.1",
+    "browserify": "^17.0.0",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
     "gulp": "^4.0.2",
-    "gulp-babel": "^6.1.2",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^2.0.0",
-    "istanbul": "^0.4.4",
+    "gulp-babel": "^8.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2",
     "mocha": "^10.2.0",
-    "must": "^0.13.2",
-    "sinon": "^1.17.5",
-    "vinyl-source-stream": "^1.1.0"
+    "must": "^0.13.4",
+    "nyc": "^15.1.0",
+    "sinon": "^15.0.0",
+    "vinyl-source-stream": "^2.0.0"
   },
-  "dependencies": {},
   "browserify": {
     "transform": [
       "babelify"
