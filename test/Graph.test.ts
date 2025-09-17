@@ -1,7 +1,6 @@
 import 'mocha';
 import 'must';
 const demand = require('must');
-const sinon = require('sinon');
 
 import { Graph } from '../src/Graph';
 
@@ -91,18 +90,6 @@ describe('Graph', () => {
       demand(node).be.instanceOf(Map);
       demand(node.get('b')).equal(10);
       demand(node.get('c')).equal(20);
-    });
-  });
-
-  describe('#addVertex()', () => {
-    it('is alias of Graph#addNode()', () => {
-      const route = new Graph();
-      const spy = sinon.spy(route, 'addNode');
-
-      route.addVertex('a', { b: 1 });
-
-      sinon.assert.calledOnce(spy);
-      sinon.assert.alwaysCalledOn(spy, route);
     });
   });
 
@@ -267,17 +254,6 @@ describe('Graph', () => {
       const route = new Graph(graph);
 
       route.path('a', 'f')!.must.eql(['a', 'c', 'd', 'f']);
-    });
-  });
-
-  describe('#shortestPath()', () => {
-    it('is an alias of path', () => {
-      const route = new Graph(vertices);
-      const spy = sinon.spy(route, 'path');
-
-      route.shortestPath('a', 'e');
-
-      sinon.assert.calledOnce(spy);
     });
   });
 

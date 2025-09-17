@@ -1,10 +1,5 @@
 import { GraphNode } from './toDeepMap';
 
-/**
- * Removes a key and all of its references from a map.
- * This function has no side-effects as it returns
- * a brand new map.
- */
 export function removeDeepFromMap(
   map: Map<string | number, GraphNode>,
   key: string | number

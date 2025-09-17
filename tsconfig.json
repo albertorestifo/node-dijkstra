@@ -22,13 +22,13 @@
     "noImplicitOverride": true
   },
   "include": [
-    "src/**/*",
-    "test/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "coverage",
-    ".nyc_output"
+    ".nyc_output",
+    "test"
   ]
 }

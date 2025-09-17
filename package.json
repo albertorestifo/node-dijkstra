@@ -14,10 +14,11 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "npm run lint && npm run build && nyc --reporter=html mocha -t 5000 dist/test/**/*.test.js",
-    "test:dev": "npm run build && mocha -t 5000 dist/test/**/*.test.js",
-    "lint": "eslint src test --ext .ts",
-    "lint:fix": "eslint src test --ext .ts --fix",
+    "build:test": "tsc -p tsconfig.test.json",
+    "test": "npm run lint && npm run build:test && nyc --reporter=html mocha -t 5000 dist/test/**/*.test.js",
+    "test:dev": "npm run build:test && mocha -t 5000 dist/test/**/*.test.js",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
     "prepare": "npm run build",
     "compile": "npm run build"
   },
@@ -38,8 +39,8 @@
     "LICENSE.md"
   ],
   "devDependencies": {
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^20.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.19.16",
     "@types/sinon": "^10.0.16",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

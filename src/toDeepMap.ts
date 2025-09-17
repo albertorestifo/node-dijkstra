@@ -1,21 +1,10 @@
-/**
- * Validates a cost for a node
- */
 function isValidNode(val: unknown): boolean {
   const cost = Number(val);
-
-  if (isNaN(cost) || cost <= 0) {
-    return false;
-  }
-
-  return true;
+  return !isNaN(cost) && cost > 0;
 }
 
 export type GraphNode = number | Map<string | number, GraphNode>;
 
-/**
- * Creates a deep `Map` from the passed object.
- */
 export function toDeepMap(source: Record<string, unknown>): Map<string | number, GraphNode> {
   const map = new Map<string | number, GraphNode>();
   const keys = Object.keys(source);
@@ -28,9 +17,7 @@ export function toDeepMap(source: Record<string, unknown>): Map<string | number,
     }
 
     if (!isValidNode(val)) {
-      throw new Error(
-        `Could not add node at key "${key}", make sure it's a valid node`
-      );
+      throw new Error(`Could not add node at key "${key}", make sure it's a valid node`);
     }
 
     return map.set(key, Number(val));
