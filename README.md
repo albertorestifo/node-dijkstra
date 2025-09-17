@@ -210,6 +210,15 @@ route.path("A", "D", { cost: true });
 - The method `Graph#shortestPath` has been deprecated, use `Graph#path` instead
 - The method `Graph#addVertex` has been deprecated, use `Graph#addNode` instead
 
+## Releases
+
+This package uses automated releases to NPM via GitHub Actions. When a new [GitHub release](https://github.com/albertorestifo/node-dijkstra/releases) is published, the package is automatically published to NPM after running the test suite.
+
+To create a new release:
+1. Update the version in `package.json`
+2. Create a new [GitHub release](https://github.com/albertorestifo/node-dijkstra/releases/new) with a tag matching the version
+3. The GitHub Actions workflow will automatically publish to NPM
+
 ## Testing
 
 ```shell
