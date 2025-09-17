@@ -8,9 +8,13 @@ export type EdgeWeight = number;
 export type GraphNode = number | Map<NodeKey, GraphNode>;
 
 export interface PathOptions {
+  /** Exclude the origin and destination nodes from the result */
   trim?: boolean;
+  /** Return the path in reversed order, from goal to start */
   reverse?: boolean;
+  /** Return an object with path and cost instead of just the path */
   cost?: boolean;
+  /** Array of nodes to be avoided when finding the path */
   avoid?: NodeKey[];
 }
 
