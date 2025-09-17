@@ -13,6 +13,10 @@ export interface PathOptions {
   avoid?: NodeKey[];
 }
 
+export interface PathOptionsWithCost extends PathOptions {
+  cost: true;
+}
+
 export interface PathResult {
   path: NodeKey[] | null;
   cost: EdgeWeight;
@@ -55,10 +59,7 @@ export class Graph {
     return this;
   }
 
-  path(start: NodeKey, goal: NodeKey): NodeKey[] | null;
-  path(start: NodeKey, goal: NodeKey, options: PathOptions & { cost: true }): PathResult;
-  path(start: NodeKey, goal: NodeKey, options: PathOptions): NodeKey[] | null;
-  path(start: NodeKey, goal: NodeKey, options: PathOptions = {}): NodeKey[] | null | PathResult {
+  path(start: NodeKey, goal: NodeKey, options: PathOptions = {}): NodeKey[] | PathResult | null {
     if (!this.graph.size) {
       if (options.cost) return { path: null, cost: 0 };
       return null;

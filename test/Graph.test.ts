@@ -2,7 +2,7 @@ import 'mocha';
 import 'must';
 const demand = require('must');
 
-import { Graph } from '../src/Graph';
+import { Graph, PathResult } from '../src/Graph';
 
 describe('Graph', () => {
   const vertices = {
@@ -105,7 +105,7 @@ describe('Graph', () => {
     it('returns an object containing the cost', () => {
       const route = new Graph(vertices);
 
-      const res = route.path('a', 'e', { cost: true });
+      const res = route.path('a', 'e', { cost: true }) as PathResult;
 
       res.must.be.object();
       res.path!.must.eql(['a', 'b', 'c', 'd', 'e']);
@@ -123,7 +123,7 @@ describe('Graph', () => {
     it('returns an object containing the cost and inverted path', () => {
       const route = new Graph(vertices);
 
-      const res = route.path('a', 'c', { cost: true, reverse: true });
+      const res = route.path('a', 'c', { cost: true, reverse: true }) as PathResult;
 
       res.must.be.object();
       res.path!.must.eql(['c', 'b', 'a']);
@@ -141,7 +141,7 @@ describe('Graph', () => {
     it('returns an object containing the cost and trimmed path', () => {
       const route = new Graph(vertices);
 
-      const res = route.path('a', 'c', { cost: true, trim: true });
+      const res = route.path('a', 'c', { cost: true, trim: true }) as PathResult;
 
       res.must.be.object();
       res.path!.must.eql(['b']);
@@ -163,7 +163,7 @@ describe('Graph', () => {
         cost: true,
         reverse: true,
         trim: true,
-      });
+      }) as PathResult;
 
       res.must.be.object();
       res.path!.must.eql(['b']);
@@ -181,7 +181,7 @@ describe('Graph', () => {
     it('returns null as path and 0 as cost when no path exists and we want the cost', () => {
       const route = new Graph(vertices);
 
-      const res = route.path('a', 'x' as any, { cost: true });
+      const res = route.path('a', 'x' as any, { cost: true }) as PathResult;
 
       demand(res.path).be.null();
       res.cost.must.equal(0);
@@ -198,7 +198,7 @@ describe('Graph', () => {
     it('returns null as path and 0 as cost when no vertices are defined and we want the cost', () => {
       const route = new Graph();
 
-      const res = route.path('a', 'd', { cost: true });
+      const res = route.path('a', 'd', { cost: true }) as PathResult;
 
       demand(res.path).be.null();
       res.cost.must.equal(0);
@@ -235,7 +235,7 @@ describe('Graph', () => {
     it('returns the same path and cost if a node which is not part of the graph is avoided', () => {
       const route = new Graph(vertices);
 
-      const res = route.path('a', 'e', { cost: true, avoid: ['x'] });
+      const res = route.path('a', 'e', { cost: true, avoid: ['x'] }) as PathResult;
 
       res.path!.must.eql(['a', 'b', 'c', 'd', 'e']);
       res.cost.must.equal(50);

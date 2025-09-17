@@ -6,12 +6,11 @@
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
-  "extends": [
-    "eslint:recommended"
-  ],
+  "extends": ["eslint:recommended"],
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-    "no-dupe-class-members": "off"
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-var-requires": "error"
   },
   "env": {
     "node": true,
@@ -24,8 +23,7 @@
         "mocha": true
       },
       "rules": {
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": "off"
+        "@typescript-eslint/no-explicit-any": "off"
       }
     }
   ]
