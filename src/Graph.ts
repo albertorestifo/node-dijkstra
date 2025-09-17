@@ -1,10 +1,11 @@
 import { PriorityQueue } from './PriorityQueue';
 import { removeDeepFromMap } from './removeDeepFromMap';
-import { toDeepMap, GraphNode } from './toDeepMap';
+import { toDeepMap } from './toDeepMap';
 import { validateDeep } from './validateDeep';
 
 export type NodeKey = string | number;
 export type EdgeWeight = number;
+export type GraphNode = number | Map<NodeKey, GraphNode>;
 
 export interface PathOptions {
   trim?: boolean;

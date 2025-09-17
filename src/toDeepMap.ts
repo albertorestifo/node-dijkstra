@@ -1,12 +1,12 @@
+import { NodeKey, GraphNode } from './Graph';
+
 function isValidNode(val: unknown): boolean {
   const cost = Number(val);
   return !isNaN(cost) && cost > 0;
 }
 
-export type GraphNode = number | Map<string | number, GraphNode>;
-
-export function toDeepMap(source: Record<string, unknown>): Map<string | number, GraphNode> {
-  const map = new Map<string | number, GraphNode>();
+export function toDeepMap(source: Record<string, unknown>): Map<NodeKey, GraphNode> {
+  const map = new Map<NodeKey, GraphNode>();
   const keys = Object.keys(source);
 
   keys.forEach((key) => {

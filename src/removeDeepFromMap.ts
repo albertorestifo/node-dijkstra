@@ -1,10 +1,10 @@
-import { GraphNode } from './toDeepMap';
+import { NodeKey, GraphNode } from './Graph';
 
 export function removeDeepFromMap(
-  map: Map<string | number, GraphNode>,
-  key: string | number
-): Map<string | number, GraphNode> {
-  const newMap = new Map<string | number, GraphNode>();
+  map: Map<NodeKey, GraphNode>,
+  key: NodeKey
+): Map<NodeKey, GraphNode> {
+  const newMap = new Map<NodeKey, GraphNode>();
 
   for (const [aKey, val] of map) {
     if (aKey !== key && val instanceof Map) {

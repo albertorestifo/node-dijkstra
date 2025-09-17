@@ -1,6 +1,6 @@
-import { GraphNode } from './toDeepMap';
+import { NodeKey, GraphNode } from './Graph';
 
-export function validateDeep(map: Map<string | number, GraphNode>): void {
+export function validateDeep(map: Map<NodeKey, GraphNode>): void {
   if (!(map instanceof Map)) {
     throw new Error(`Invalid graph: Expected Map instead found ${typeof map}`);
   }
