@@ -1,14 +1,15 @@
+import { GraphNode } from './toDeepMap';
+
 /**
  * Removes a key and all of its references from a map.
  * This function has no side-effects as it returns
  * a brand new map.
- *
- * @param {Map}     map - Map to remove the key from
- * @param {string}  key - Key to remove from the map
- * @return {Map}    New map without the passed key
  */
-function removeDeepFromMap(map, key) {
-  const newMap = new Map();
+export function removeDeepFromMap(
+  map: Map<string | number, GraphNode>,
+  key: string | number
+): Map<string | number, GraphNode> {
+  const newMap = new Map<string | number, GraphNode>();
 
   for (const [aKey, val] of map) {
     if (aKey !== key && val instanceof Map) {
@@ -20,5 +21,3 @@ function removeDeepFromMap(map, key) {
 
   return newMap;
 }
-
-module.exports = removeDeepFromMap;

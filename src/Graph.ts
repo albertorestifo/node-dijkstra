@@ -1,10 +1,46 @@
-const Queue = require("./PriorityQueue");
-const removeDeepFromMap = require("./removeDeepFromMap");
-const toDeepMap = require("./toDeepMap");
-const validateDeep = require("./validateDeep");
+import { PriorityQueue } from './PriorityQueue';
+import { removeDeepFromMap } from './removeDeepFromMap';
+import { toDeepMap, GraphNode } from './toDeepMap';
+import { validateDeep } from './validateDeep';
 
-/** Creates and manages a graph */
-class Graph {
+/**
+ * Options for path finding
+ */
+export interface PathOptions {
+  /** Exclude the origin and destination nodes from the result */
+  trim?: boolean;
+  /** Return the path in reversed order */
+  reverse?: boolean;
+  /** Also return the cost of the path when set to true */
+  cost?: boolean;
+  /** Nodes to be avoided */
+  avoid?: (string | number)[];
+}
+
+/**
+ * Result when cost option is enabled
+ */
+export interface PathResult {
+  path: (string | number)[] | null;
+  cost: number;
+}
+
+/**
+ * Graph representation as an object
+ */
+export type GraphData = Record<string, Record<string, number>>;
+
+/**
+ * Graph representation as a Map
+ */
+export type GraphMap = Map<string | number, GraphNode>;
+
+/**
+ * Creates and manages a graph
+ */
+export class Graph {
+  private graph: GraphMap;
+
   /**
    * Creates a new Graph, optionally initializing it a nodes graph representation.
    *
@@ -21,9 +57,8 @@ class Graph {
    * In alternative to an object, you can pass a `Map` of `Map`. This will
    * allow you to specify numbers as keys.
    *
-   * @param {Objec|Map} [graph] - Initial graph definition
    * @example
-   *
+   * ```typescript
    * const route = new Graph();
    *
    * // Pre-populated graph
@@ -47,8 +82,9 @@ class Graph {
    * g.set('B', b)
    *
    * const route = new Graph(g)
+   * ```
    */
-  constructor(graph) {
+  constructor(graph?: GraphData | GraphMap) {
     if (graph instanceof Map) {
       validateDeep(graph);
       this.graph = graph;
@@ -62,11 +98,8 @@ class Graph {
   /**
    * Adds a node to the graph
    *
-   * @param {string} name      - Name of the node
-   * @param {Object|Map} neighbors - Neighbouring nodes and cost to reach them
-   * @return {this}
    * @example
-   *
+   * ```typescript
    * const route = new Graph();
    *
    * route.addNode('A', { B: 1 });
@@ -82,17 +115,23 @@ class Graph {
    * d.set('B', 8)
    *
    * route.addNode('D', d)
+   * ```
    */
-  addNode(name, neighbors) {
-    let nodes;
+  addNode(
+    name: string | number,
+    neighbors: Record<string, number> | Map<string | number, number>
+  ): this {
     if (neighbors instanceof Map) {
       validateDeep(neighbors);
-      nodes = neighbors;
+      this.graph.set(name, neighbors);
     } else {
-      nodes = toDeepMap(neighbors);
+      // Convert object to Map<string|number, number>
+      const neighborMap = new Map<string | number, number>();
+      Object.entries(neighbors).forEach(([key, value]) => {
+        neighborMap.set(key, value);
+      });
+      this.graph.set(name, neighborMap);
     }
-
-    this.graph.set(name, nodes);
 
     return this;
   }
@@ -100,17 +139,18 @@ class Graph {
   /**
    * @deprecated since version 2.0, use `Graph#addNode` instead
    */
-  addVertex(name, neighbors) {
+  addVertex(
+    name: string | number,
+    neighbors: Record<string, number> | Map<string | number, number>
+  ): this {
     return this.addNode(name, neighbors);
   }
 
   /**
    * Removes a node and all of its references from the graph
    *
-   * @param {string|number} key - Key of the node to remove from the graph
-   * @return {this}
    * @example
-   *
+   * ```typescript
    * const route = new Graph({
    *   A: { B: 1, C: 5 },
    *   B: { A: 3 },
@@ -120,8 +160,9 @@ class Graph {
    * route.removeNode('C');
    * // The graph now is:
    * // { A: { B: 1 }, B: { A: 3 } }
+   * ```
    */
-  removeNode(key) {
+  removeNode(key: string | number): this {
     this.graph = removeDeepFromMap(this.graph, key);
 
     return this;
@@ -130,22 +171,17 @@ class Graph {
   /**
    * Compute the shortest path between the specified nodes
    *
-   * @param {string}  start     - Starting node
-   * @param {string}  goal      - Node we want to reach
-   * @param {object}  [options] - Options
-   *
-   * @param {boolean} [options.trim]    - Exclude the origin and destination nodes from the result
-   * @param {boolean} [options.reverse] - Return the path in reversed order
-   * @param {boolean} [options.cost]    - Also return the cost of the path when set to true
-   *
-   * @return {array|object} Computed path between the nodes.
+   * @param start - Starting node
+   * @param goal - Node we want to reach
+   * @param options - Options
+   * @returns Computed path between the nodes.
    *
    *  When `option.cost` is set to true, the returned value will be an object with shape:
    *    - `path` *(Array)*: Computed path between the nodes
    *    - `cost` *(Number)*: Cost of the path
    *
    * @example
-   *
+   * ```typescript
    * const route = new Graph()
    *
    * route.addNode('A', { B: 1 })
@@ -167,8 +203,24 @@ class Graph {
    * //       path: [ 'A', 'B', 'C', 'D' ],
    * //       cost: 4
    * //    }
+   * ```
    */
-  path(start, goal, options = {}) {
+  path(start: string | number, goal: string | number): (string | number)[] | null;
+  path(
+    start: string | number,
+    goal: string | number,
+    options: PathOptions & { cost: true }
+  ): PathResult;
+  path(
+    start: string | number,
+    goal: string | number,
+    options: PathOptions
+  ): (string | number)[] | null;
+  path(
+    start: string | number,
+    goal: string | number,
+    options: PathOptions = {}
+  ): (string | number)[] | null | PathResult {
     // Don't run when we don't have nodes set
     if (!this.graph.size) {
       if (options.cost) return { path: null, cost: 0 };
@@ -176,15 +228,14 @@ class Graph {
       return null;
     }
 
-    const explored = new Set();
-    const frontier = new Queue();
-    const previous = new Map();
+    const explored = new Set<string | number>();
+    const frontier = new PriorityQueue<string | number>();
+    const previous = new Map<string | number, string | number>();
 
-    let path = [];
+    let path: (string | number)[] = [];
     let totalCost = 0;
 
-    let avoid = [];
-    if (options.avoid) avoid = [].concat(options.avoid);
+    const avoid: (string | number)[] = options.avoid ? [...options.avoid] : [];
 
     if (avoid.includes(start)) {
       throw new Error(`Starting node (${start}) cannot be avoided`);
@@ -209,7 +260,7 @@ class Graph {
         let nodeKey = node.key;
         while (previous.has(nodeKey)) {
           path.push(nodeKey);
-          nodeKey = previous.get(nodeKey);
+          nodeKey = previous.get(nodeKey)!;
         }
 
         break;
@@ -219,29 +270,31 @@ class Graph {
       explored.add(node.key);
 
       // Loop all the neighboring nodes
-      const neighbors = this.graph.get(node.key) || new Map();
+      const neighbors = this.graph.get(node.key) as Map<string | number, number> || new Map();
       neighbors.forEach((nCost, nNode) => {
         // If we already explored the node, or the node is to be avoided, skip it
-        if (explored.has(nNode) || avoid.includes(nNode)) return null;
+        if (explored.has(nNode) || avoid.includes(nNode)) return;
 
         // If the neighboring node is not yet in the frontier, we add it with
         // the correct cost
         if (!frontier.has(nNode)) {
           previous.set(nNode, node.key);
-          return frontier.set(nNode, node.priority + nCost);
+          frontier.set(nNode, node.priority + nCost);
+          return;
         }
 
-        const frontierPriority = frontier.get(nNode).priority;
+        const frontierEntry = frontier.get(nNode);
+        if (!frontierEntry) return;
+        
+        const frontierPriority = frontierEntry.priority;
         const nodeCost = node.priority + nCost;
 
         // Otherwise we only update the cost of this node in the frontier when
         // it's below what's currently set
         if (nodeCost < frontierPriority) {
           previous.set(nNode, node.key);
-          return frontier.set(nNode, nodeCost);
+          frontier.set(nNode, nodeCost);
         }
-
-        return null;
       });
     }
 
@@ -283,9 +336,13 @@ class Graph {
   /**
    * @deprecated since version 2.0, use `Graph#path` instead
    */
-  shortestPath(...args) {
-    return this.path(...args);
+  shortestPath(
+    start: string | number,
+    goal: string | number,
+    options?: PathOptions
+  ): (string | number)[] | null | PathResult {
+    return this.path(start, goal, options as any);
   }
 }
 
-module.exports = Graph;
+export default Graph;

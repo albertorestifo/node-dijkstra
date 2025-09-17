@@ -1,7 +1,31 @@
 {
-    "extends": ["plugin:import/recommended", "plugin:jsx-a11y/recommended", "prettier"],
-    "plugins": ["import", "jsx-a11y", "prettier"],
-    "rules": {
-      "prettier/prettier": ["error"]
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-dupe-class-members": "off"
+  },
+  "env": {
+    "node": true,
+    "es2020": true
+  },
+  "overrides": [
+    {
+      "files": ["test/**/*.ts"],
+      "env": {
+        "mocha": true
+      },
+      "rules": {
+        "no-unused-vars": "off"
+      }
     }
+  ]
 }

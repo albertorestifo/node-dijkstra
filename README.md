@@ -2,77 +2,77 @@
 
 [![Unit Tests](https://github.com/albertorestifo/node-dijkstra/actions/workflows/test.yml/badge.svg)](https://github.com/albertorestifo/node-dijkstra/actions/workflows/test.yml) [![codecov.io](http://codecov.io/github/albertorestifo/node-dijkstra/coverage.svg?branch=master)](http://codecov.io/github/albertorestifo/node-dijkstra?branch=master)
 
-> Fast JavaScript implementation of the Dijkstra's shortest path problem for NodeJS
+> Fast TypeScript implementation of Dijkstra's shortest path algorithm for NodeJS
 
 ## Installation
 
-Since version 2 this plugin uses some ES6 features. You can run the latest version on **NodeJS `v4.0.0` or newer**
+**Version 3.0.0** is a complete rewrite in TypeScript with modern features. This version requires **NodeJS `v16.0.0` or newer**.
 
 ```shell
-npm install node-dijkstra --save
+npm install node-dijkstra
 ```
 
-### NodeJS prior `v4.0.0`
+### Previous Versions
 
-On versions of NodeJS prior `v4.0.0`, although less performant, it's safe to use the version `1.1.3` that you can install as follows:
-
-```shell
-npm install node-dijkstra@1.1.3 --save
-```
-
-You can then refer to the [`v1.1.3` documentation](https://github.com/albertorestifo/node-dijkstra/blob/v1.1.3/README.md#api)
+For older Node.js versions:
+- **v2.x**: NodeJS `v4.0.0` or newer
+- **v1.1.3**: NodeJS prior to `v4.0.0`
 
 ## Usage
 
-Basic example:
+### TypeScript
 
-```js
-const Graph = require("node-dijkstra");
+```typescript
+import { Graph } from 'node-dijkstra';
 
 const route = new Graph();
 
-route.addNode("A", { B: 1 });
-route.addNode("B", { A: 1, C: 2, D: 4 });
-route.addNode("C", { B: 2, D: 1 });
-route.addNode("D", { C: 1, B: 4 });
+route.addNode('A', { B: 1 });
+route.addNode('B', { A: 1, C: 2, D: 4 });
+route.addNode('C', { B: 2, D: 1 });
+route.addNode('D', { C: 1, B: 4 });
 
-route.path("A", "D"); // => [ 'A', 'B', 'C', 'D' ]
+route.path('A', 'D'); // => ['A', 'B', 'C', 'D']
+```
+
+### JavaScript (CommonJS)
+
+```javascript
+const { Graph } = require('node-dijkstra');
+
+const route = new Graph();
+
+route.addNode('A', { B: 1 });
+route.addNode('B', { A: 1, C: 2, D: 4 });
+route.addNode('C', { B: 2, D: 1 });
+route.addNode('D', { C: 1, B: 4 });
+
+route.path('A', 'D'); // => ['A', 'B', 'C', 'D']
 ```
 
 ## API
 
-### `Graph([nodes])`
+### `new Graph([nodes])`
+
+Creates a new Graph instance.
 
 #### Parameters
 
-- `Object|Map nodes` _optional_: Initial nodes graph.
+- `nodes` _(Object|Map, optional)_: Initial nodes graph.
 
 A nodes graph must follow this structure:
 
-```
+```typescript
 {
-  node: {
-    neighbor: cost Number
-  }
-}
-```
-
-```js
-{
-  'A': {
-    'B': 1
-  },
-  'B': {
-    'A': 1,
-    'C': 2,
-    'D': 4
+  [node: string]: {
+    [neighbor: string]: cost // number
   }
 }
 ```
 
 #### Example
 
-```js
+```typescript
 const route = new Graph();
 
 // or with pre-populated graph
@@ -82,131 +82,149 @@ const route = new Graph({
 });
 ```
 
-It's possible to pass the constructor a deep `Map`. This allows using numbers as keys for the nodes.
+You can also pass a `Map` for better performance and to use numbers as keys:
 
-```js
+```typescript
 const graph = new Map();
 
 const a = new Map();
-a.set("B", 1);
+a.set('B', 1);
 
 const b = new Map();
-b.set("A", 1);
-b.set("C", 2);
-b.set("D", 4);
+b.set('A', 1);
+b.set('C', 2);
+b.set('D', 4);
 
-graph.set("A", a);
-graph.set("B", b);
+graph.set('A', a);
+graph.set('B', b);
 
 const route = new Graph(graph);
 ```
 
 ### `Graph#addNode(name, edges)`
 
-Add a node to the nodes graph
+Add a node to the graph.
 
 #### Parameters
 
-- `String name`: name of the node
-- `Object|Map edges`: object or `Map` containing the name of the neighboring nodes and their cost
+- `name` _(string|number)_: Name of the node
+- `edges` _(Object|Map)_: Neighboring nodes and cost to reach them
 
 #### Returns
 
-Returns `this` allowing chained calls.
+Returns the Graph instance for method chaining.
 
-```js
+#### Example
+
+```typescript
 const route = new Graph();
 
-route.addNode("A", { B: 1 });
+route.addNode('A', { B: 1 });
 
-// chaining is possible
-route.addNode("B", { A: 1 }).addNode("C", { A: 3 });
+// Method chaining
+route
+  .addNode('B', { A: 1 })
+  .addNode('C', { A: 3 });
 
-// passing a Map directly is possible
-const c = new Map();
-c.set("A", 4);
-
-route.addNode("C", c);
+// Using a Map
+const d = new Map();
+d.set('A', 2);
+d.set('B', 8);
+route.addNode('D', d);
 ```
 
 ### `Graph#removeNode(name)`
 
-Removes a node and all its references from the graph
+Remove a node and all of its references from the graph.
 
 #### Parameters
 
-- `String name`: name of the node to remove
+- `name` _(string|number)_: Key of the node to remove
 
 #### Returns
 
-Returns `this` allowing chained calls.
+Returns the Graph instance for method chaining.
 
-```js
+#### Example
+
+```typescript
 const route = new Graph({
-  a: { b: 3, c: 10 },
-  b: { a: 5, c: 2 },
-  c: { b: 1 },
+  A: { B: 1, C: 5 },
+  B: { A: 3 },
+  C: { B: 2, A: 2 },
 });
 
-route.removeNode("c");
-// => The graph now is:
-// {
-//   a: { b: 3 },
-//   b: { a: 5 },
-// }
+route.removeNode('C');
+// The graph now is: { A: { B: 1 }, B: { A: 3 } }
 ```
 
 ### `Graph#path(start, goal [, options])`
 
+Find the shortest path between two nodes.
+
 #### Parameters
 
-- `String start`: Name of the starting node
-- `String goal`: Name of out goal node
-- `Object options` _optional_: Addittional options:
-  - `Boolean trim`, default `false`: If set to true, the result won't include the start and goal nodes
-  - `Boolean reverse`, default `false`: If set to true, the result will be in reverse order, from goal to start
-  - `Boolean cost`, default `false`: If set to true, an object will be returned with the following keys:
-    - `Array path`: Computed path (subject to other options)
-    - `Number cost`: Total cost for the found path
-  - `Array avoid`, default `[]`: Nodes to be avoided
+- `start` _(string|number)_: Name of the starting node
+- `goal` _(string|number)_: Name of the destination node
+- `options` _(Object, optional)_: Additional options:
+  - `trim` _(boolean, default: false)_: If true, exclude start and goal nodes from the result
+  - `reverse` _(boolean, default: false)_: If true, return path in reverse order (goal to start)
+  - `cost` _(boolean, default: false)_: If true, return an object with path and cost
+  - `avoid` _(Array, default: [])_: Array of nodes to avoid
 
 #### Returns
 
-If `options.cost` is `false` (default behaviour) an `Array` will be returned, containing the name of the crossed nodes. By default it will be ordered from start to goal, and those nodes will also be included. This behaviour can be changes with `options.trim` and `options.reverse` (see above)
+- **Array**: When `options.cost` is `false`, returns an array of node names from start to goal
+- **Object**: When `options.cost` is `true`, returns `{ path: Array, cost: number }`
+- **null**: When no path exists
 
-If `options.cost` is `true`, an `Object` with keys `path` and `cost` will be returned. `path` follows the same rules as above and `cost` is the total cost of the found route between nodes.
+#### Example
 
-When to route can be found, the path will be set to `null`.
-
-```js
-const Graph = require("node-dijkstra");
+```typescript
+import { Graph } from 'node-dijkstra';
 
 const route = new Graph();
 
-route.addNode("A", { B: 1 });
-route.addNode("B", { A: 1, C: 2, D: 4 });
-route.addNode("C", { B: 2, D: 1 });
-route.addNode("D", { C: 1, B: 4 });
+route.addNode('A', { B: 1 });
+route.addNode('B', { A: 1, C: 2, D: 4 });
+route.addNode('C', { B: 2, D: 1 });
+route.addNode('D', { C: 1, B: 4 });
 
-route.path("A", "D"); // => ['A', 'B', 'C', 'D']
+route.path('A', 'D'); // => ['A', 'B', 'C', 'D']
 
-// trimmed
-route.path("A", "D", { trim: true }); // => [B', 'C']
+// With options
+route.path('A', 'D', { trim: true }); // => ['B', 'C']
+route.path('A', 'D', { reverse: true }); // => ['D', 'C', 'B', 'A']
+route.path('A', 'D', { cost: true });
+// => { path: ['A', 'B', 'C', 'D'], cost: 4 }
 
-// reversed
-route.path("A", "D", { reverse: true }); // => ['D', 'C', 'B', 'A']
-
-// include the cost
-route.path("A", "D", { cost: true });
-// => {
-//       path: [ 'A', 'B', 'C', 'D' ],
-//       cost: 4
-//    }
+// Avoid nodes
+route.path('A', 'D', { avoid: ['B'] }); // => ['A', 'C', 'D']
 ```
 
-## Upgrading from `v1`
+## Breaking Changes in v3.0.0
 
-- The `v2` release in not compatible with NodeJS prior to the version 4.0
+- **TypeScript**: Complete rewrite in TypeScript with full type definitions
+- **Node.js**: Requires Node.js v16.0.0 or newer
+- **ES Modules**: Primary support for ES modules, CommonJS still supported
+- **Import**: Use named import `{ Graph }` instead of default import
+- **Types**: All parameters and return values are now strongly typed
+
+### Migration from v2.x
+
+```typescript
+// v2.x
+const Graph = require('node-dijkstra');
+
+// v3.x TypeScript
+import { Graph } from 'node-dijkstra';
+
+// v3.x JavaScript
+const { Graph } = require('node-dijkstra');
+```
+
+## Upgrading from v1.x
+
 - The method `Graph#shortestPath` has been deprecated, use `Graph#path` instead
 - The method `Graph#addVertex` has been deprecated, use `Graph#addNode` instead
 
@@ -216,6 +234,10 @@ route.path("A", "D", { cost: true });
 npm test
 ```
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+## License
 
-[1]: https://github.com/andrewhayward/dijkstra
+MIT
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

@@ -1,49 +1,56 @@
 {
   "name": "node-dijkstra",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "description": "A NodeJS implementation of Dijkstra's algorithm",
   "author": "Alberto Restifo <alberto.restifo@gmail.com>",
-  "main": "libs/Graph.js",
+  "main": "dist/src/Graph.js",
+  "types": "dist/src/Graph.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/albertorestifo/node-dijkstra"
   },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
-    "test": "eslint . && nyc --reporter=html mocha -t 5000",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "compile": "gulp build"
+    "build": "tsc",
+    "test": "npm run lint && npm run build && nyc --reporter=html mocha -t 5000 dist/test/**/*.test.js",
+    "test:dev": "npm run build && mocha -t 5000 dist/test/**/*.test.js",
+    "lint": "eslint src test --ext .ts",
+    "lint:fix": "eslint src test --ext .ts --fix",
+    "prepare": "npm run build",
+    "compile": "npm run build"
   },
   "bugs": {
     "url": "https://github.com/albertorestifo/node-dijkstra/issues"
   },
   "keywords": [
     "dijkstra",
-    "shortest path"
+    "shortest path",
+    "typescript",
+    "graph",
+    "algorithm"
   ],
   "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE.md"
+  ],
   "devDependencies": {
-    "@babel/core": "^7.20.5",
-    "@babel/eslint-parser": "^7.19.1",
-    "browserify": "^17.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.0.0",
+    "@types/sinon": "^10.0.16",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-prettier": "^4.2.1",
-    "gulp": "^5.0.1",
-    "gulp-babel": "^8.0.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-uglify": "^3.0.2",
     "mocha": "^10.2.0",
     "must": "^0.13.4",
     "nyc": "^15.1.0",
+    "prettier": "^3.6.2",
     "sinon": "^15.0.0",
-    "vinyl-source-stream": "^2.0.0"
-  },
-  "browserify": {
-    "transform": [
-      "babelify"
-    ]
+    "typescript": "^5.9.2"
   }
 }

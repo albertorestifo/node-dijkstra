@@ -1,4 +1,12 @@
 /**
+ * Queue entry containing a key and its priority
+ */
+export interface QueueEntry<T = string | number> {
+  key: T;
+  priority: number;
+}
+
+/**
  * This very basic implementation of a priority queue is used to select the
  * next node of the graph to walk to.
  *
@@ -8,35 +16,32 @@
  * You should **never** modify the queue directly, but only using the methods
  * provided by the class.
  */
-class PriorityQueue {
+export class PriorityQueue<T = string | number> {
+  private readonly keys: Set<T>;
+  private readonly queue: QueueEntry<T>[];
+
   /**
    * Creates a new empty priority queue
    */
   constructor() {
     // The `keys` set is used to greatly improve the speed at which we can
     // check the presence of a value in the queue
-    this.keys = new Set();
+    this.keys = new Set<T>();
     this.queue = [];
   }
 
   /**
    * Sort the queue to have the least expensive node to visit on top
-   *
-   * @private
    */
-  sort() {
+  private sort(): void {
     this.queue.sort((a, b) => a.priority - b.priority);
   }
 
   /**
    * Sets a priority for a key in the queue.
    * Inserts it in the queue if it does not already exists.
-   *
-   * @param {any}     key       Key to update or insert
-   * @param {number}  value     Priority of the key
-   * @return {number} Size of the queue
    */
-  set(key, value) {
+  set(key: T, value: number): number {
     const priority = Number(value);
     if (isNaN(priority)) throw new TypeError('"priority" must be a number');
 
@@ -62,11 +67,13 @@ class PriorityQueue {
   /**
    * The next method is used to dequeue a key:
    * It removes the first element from the queue and returns it
-   *
-   * @return {object} First priority queue entry
    */
-  next() {
+  next(): QueueEntry<T> {
     const element = this.queue.shift();
+    
+    if (!element) {
+      throw new Error('Queue is empty');
+    }
 
     // Remove the key from the `_keys` set
     this.keys.delete(element.key);
@@ -75,31 +82,23 @@ class PriorityQueue {
   }
 
   /**
-   * @return {boolean} `true` when the queue is empty
+   * @returns `true` when the queue is empty
    */
-  isEmpty() {
+  isEmpty(): boolean {
     return Boolean(this.queue.length === 0);
   }
 
   /**
    * Check if the queue has a key in it
-   *
-   * @param {any} key   Key to lookup
-   * @return {boolean}
    */
-  has(key) {
+  has(key: T): boolean {
     return this.keys.has(key);
   }
 
   /**
    * Get the element in the queue with the specified key
-   *
-   * @param {any} key   Key to lookup
-   * @return {object}
    */
-  get(key) {
+  get(key: T): QueueEntry<T> | undefined {
     return this.queue.find((element) => element.key === key);
   }
 }
-
-module.exports = PriorityQueue;
