@@ -97,6 +97,9 @@ declare class Graph {
      * @param [options.trim]    - Exclude the origin and destination nodes from the result
      * @param [options.reverse] - Return the path in reversed order
      * @param [options.cost]    - Also return the cost of the path when set to true
+     * @param [options.maxCost] - Only consider paths with total cost ≤ this value
+     * @param [options.maxNodes]- Maximum number of nodes allowed in the resulting path (including start and goal)
+     * @param [options.allowedCallback] - Predicate called for each potential expansion; returns true to allow the move
      *
      * @return Computed path between the nodes.
      *
@@ -136,10 +139,21 @@ interface PathOption {
     reverse?: boolean | undefined;
     cost?: boolean | undefined;
     avoid?: any[] | undefined;
+    maxCost?: number | undefined;
+    maxNodes?: number | undefined;
+    allowedCallback?: ((arg: AllowedCallbackArg) => boolean) | undefined;
+}
+
+interface AllowedCallbackArg {
+    from: string;
+    to: string;
+    cost: number;
+    accumulatedCost: number;
+    depth: number;
 }
 
 interface PathResult {
-    path: string[];
+    path: string[] | null;
     cost: number;
 }
 
