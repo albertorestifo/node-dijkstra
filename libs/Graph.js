@@ -204,10 +204,7 @@ class Graph {
     const maxNodes = hasMaxNodes
       ? Math.max(1, Math.floor(options.maxNodes))
       : undefined;
-    const canVisit =
-      typeof options.canVisit === "function"
-        ? options.canVisit
-        : null;
+    const canVisit = typeof options.canVisit === "function" ? options.canVisit : null;
 
     // Add the starting point to the frontier, it will be the first node visited
     frontier.set(start, 0);
