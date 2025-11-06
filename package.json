@@ -10,7 +10,7 @@
     "url": "https://github.com/albertorestifo/node-dijkstra"
   },
   "scripts": {
-    "test": "eslint . && nyc --reporter=html mocha -t 5000",
+    "test": "nyc --reporter=html mocha -t 5000",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "compile": "gulp build"
