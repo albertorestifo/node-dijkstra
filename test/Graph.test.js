@@ -452,5 +452,39 @@ describe("Graph", () => {
       });
       demand(found).be.true();
     });
+
+    it("calculates depth correctly across branches", () => {
+      // Build a small tree so each target node has a unique depth
+      // A (1)
+      // ├─ B (2)
+      // │  └─ D (3)
+      // └─ C (2)
+      //    └─ E (3)
+      const route = new Graph();
+      route.addNode("A", { B: 1, C: 1 });
+      route.addNode("B", { A: 1, D: 1 });
+      route.addNode("C", { A: 1, E: 1 });
+      route.addNode("D", { B: 1 });
+      route.addNode("E", { C: 1 });
+
+      const spy = sinon.spy(() => true);
+
+      // Use an unreachable goal so the search explores all branches
+      route.path("A", "Z", { canVisit: spy, cost: true });
+
+      // Expected depths for each expanded edge
+      const expected = new Map([
+        ["A->B", 2],
+        ["A->C", 2],
+        ["B->D", 3],
+        ["C->E", 3],
+      ]);
+
+      // Check observed depths
+      for (const args of spy.args) {
+        const expectedDepth = expected.get(`${args[0].from}->${args[0].to}`);
+        demand(args[0].depth).to.equal(expectedDepth);
+      }
+    });
   });
 });
