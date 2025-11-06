@@ -196,11 +196,18 @@ class Graph {
       throw new Error(`Ending node (${goal}) cannot be avoided`);
     }
 
-    const hasMaxCost = typeof options.maxCost === 'number' && !Number.isNaN(options.maxCost);
+    const hasMaxCost =
+      typeof options.maxCost === "number" && !Number.isNaN(options.maxCost);
     const maxCost = hasMaxCost ? Number(options.maxCost) : undefined;
-    const hasMaxNodes = typeof options.maxNodes === 'number' && !Number.isNaN(options.maxNodes);
-    const maxNodes = hasMaxNodes ? Math.max(1, Math.floor(options.maxNodes)) : undefined;
-    const allowedCallback = typeof options.allowedCallback === 'function' ? options.allowedCallback : null;
+    const hasMaxNodes =
+      typeof options.maxNodes === "number" && !Number.isNaN(options.maxNodes);
+    const maxNodes = hasMaxNodes
+      ? Math.max(1, Math.floor(options.maxNodes))
+      : undefined;
+    const allowedCallback =
+      typeof options.allowedCallback === "function"
+        ? options.allowedCallback
+        : null;
 
     // Add the starting point to the frontier, it will be the first node visited
     frontier.set(start, 0);

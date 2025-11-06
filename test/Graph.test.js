@@ -331,35 +331,35 @@ describe("Graph", () => {
   describe("#path() with maxCost", () => {
     it("returns null when the cheapest path exceeds maxCost (no cost)", () => {
       const route = new Graph();
-      route.addNode("A", {B: 1});
-      route.addNode("B", {A: 1, C: 2, D: 4});
-      route.addNode("C", {B: 2, D: 1});
-      route.addNode("D", {C: 1, B: 4});
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
 
-      const path = route.path("A", "D", {maxCost: 3});
+      const path = route.path("A", "D", { maxCost: 3 });
       demand(path).be.null();
     });
 
     it("returns {path:null,cost:0} when exceeding maxCost and cost:true", () => {
       const route = new Graph();
-      route.addNode("A", {B: 1});
-      route.addNode("B", {A: 1, C: 2, D: 4});
-      route.addNode("C", {B: 2, D: 1});
-      route.addNode("D", {C: 1, B: 4});
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
 
-      const res = route.path("A", "D", {maxCost: 3, cost: true});
+      const res = route.path("A", "D", { maxCost: 3, cost: true });
       demand(res.path).be.null();
       res.cost.must.equal(0);
     });
 
     it("returns the normal path when within maxCost", () => {
       const route = new Graph();
-      route.addNode("A", {B: 1});
-      route.addNode("B", {A: 1, C: 2, D: 4});
-      route.addNode("C", {B: 2, D: 1});
-      route.addNode("D", {C: 1, B: 4});
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
 
-      const res = route.path("A", "D", {maxCost: 4, cost: true});
+      const res = route.path("A", "D", { maxCost: 4, cost: true });
       res.path.must.eql(["A", "B", "C", "D"]);
       res.cost.must.equal(4);
     });
@@ -369,12 +369,12 @@ describe("Graph", () => {
     it("selects a longer-cost alternative if it satisfies the node limit", () => {
       // Graph where shortest path A-B-C-D (4 nodes, cost 4), but A-B-D (3 nodes, cost 5) exists
       const route = new Graph();
-      route.addNode("A", {B: 1});
-      route.addNode("B", {A: 1, C: 2, D: 4});
-      route.addNode("C", {B: 2, D: 1});
-      route.addNode("D", {C: 1, B: 4});
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
 
-      const res = route.path("A", "D", {maxNodes: 3, cost: true});
+      const res = route.path("A", "D", { maxNodes: 3, cost: true });
       res.path.must.eql(["A", "B", "D"]);
       res.cost.must.equal(5);
     });
@@ -382,12 +382,12 @@ describe("Graph", () => {
     it("returns null if no path satisfies the node limit", () => {
       // With maxNodes = 2, a direct edge A-D would be required but it does not exist
       const route = new Graph();
-      route.addNode("A", {B: 1});
-      route.addNode("B", {A: 1, C: 2, D: 4});
-      route.addNode("C", {B: 2, D: 1});
-      route.addNode("D", {C: 1, B: 4});
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
 
-      const res = route.path("A", "D", {maxNodes: 2, cost: true});
+      const res = route.path("A", "D", { maxNodes: 2, cost: true });
       demand(res.path).be.null();
       res.cost.must.equal(0);
     });
@@ -396,14 +396,14 @@ describe("Graph", () => {
   describe("#path() with allowedCallback", () => {
     it("can forbid specific edges and still find an alternative path", () => {
       const route = new Graph();
-      route.addNode("A", {B: 1});
-      route.addNode("B", {A: 1, C: 2, D: 4});
-      route.addNode("C", {B: 2, D: 1});
-      route.addNode("D", {C: 1, B: 4});
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
 
       const res = route.path("A", "D", {
         cost: true,
-        allowedCallback: ({to}) => to !== "C", // prevent going to C
+        allowedCallback: ({ to }) => to !== "C", // prevent going to C
       });
 
       res.path.must.eql(["A", "B", "D"]);
@@ -412,10 +412,10 @@ describe("Graph", () => {
 
     it("can block all expansions, resulting in no path", () => {
       const route = new Graph();
-      route.addNode("A", {B: 1});
-      route.addNode("B", {A: 1, C: 2, D: 4});
-      route.addNode("C", {B: 2, D: 1});
-      route.addNode("D", {C: 1, B: 4});
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
 
       const res = route.path("A", "D", {
         cost: true,
@@ -428,15 +428,15 @@ describe("Graph", () => {
 
     it("receives correct argument shape (from, to, cost, accumulatedCost, depth)", () => {
       const route = new Graph();
-      route.addNode("A", {B: 1});
-      route.addNode("B", {A: 1});
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1 });
 
-      const spy = sinon.spy(({from, to, cost, accumulatedCost, depth}) => {
+      const spy = sinon.spy(({ from, to, cost, accumulatedCost, depth }) => {
         // allow everything
         return true;
       });
 
-      route.path("A", "B", {allowedCallback: spy});
+      route.path("A", "B", { allowedCallback: spy });
 
       sinon.assert.called(spy);
       // Check at least one call has the expected shape
