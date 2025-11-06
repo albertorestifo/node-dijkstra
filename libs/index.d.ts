@@ -141,10 +141,10 @@ interface PathOption {
     avoid?: any[] | undefined;
     maxCost?: number | undefined;
     maxNodes?: number | undefined;
-    canVisit?: ((arg: canVisitArg) => boolean) | undefined;
+    canVisit?: ((arg: CanVisitArg) => boolean) | undefined;
 }
 
-interface canVisitArg {
+interface CanVisitArg {
     from: string;
     to: string;
     cost: number;
