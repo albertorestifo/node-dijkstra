@@ -4,12 +4,13 @@
   "description": "A NodeJS implementation of Dijkstra's algorithm",
   "author": "Alberto Restifo <alberto.restifo@gmail.com>",
   "main": "libs/Graph.js",
+  "types": "libs/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/albertorestifo/node-dijkstra"
   },
   "scripts": {
-    "test": "eslint . && nyc --reporter=html mocha -t 5000",
+    "test": "nyc --reporter=html mocha -t 5000",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "compile": "gulp build"

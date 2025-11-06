@@ -327,4 +327,163 @@ describe("Graph", () => {
       route.graph.get("a").has("c").must.be.false();
     });
   });
+
+  describe("#path() with maxCost", () => {
+    it("returns null when the cheapest path exceeds maxCost (no cost)", () => {
+      const route = new Graph();
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
+
+      const path = route.path("A", "D", { maxCost: 3 });
+      demand(path).be.null();
+    });
+
+    it("returns {path:null,cost:0} when exceeding maxCost and cost:true", () => {
+      const route = new Graph();
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
+
+      const res = route.path("A", "D", { maxCost: 3, cost: true });
+      demand(res.path).be.null();
+      res.cost.must.equal(0);
+    });
+
+    it("returns the normal path when within maxCost", () => {
+      const route = new Graph();
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
+
+      const res = route.path("A", "D", { maxCost: 4, cost: true });
+      res.path.must.eql(["A", "B", "C", "D"]);
+      res.cost.must.equal(4);
+    });
+  });
+
+  describe("#path() with maxNodes", () => {
+    it("selects a longer-cost alternative if it satisfies the node limit", () => {
+      // Graph where shortest path A-B-C-D (4 nodes, cost 4), but A-B-D (3 nodes, cost 5) exists
+      const route = new Graph();
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
+
+      const res = route.path("A", "D", { maxNodes: 3, cost: true });
+      res.path.must.eql(["A", "B", "D"]);
+      res.cost.must.equal(5);
+    });
+
+    it("returns null if no path satisfies the node limit", () => {
+      // With maxNodes = 2, a direct edge A-D would be required but it does not exist
+      const route = new Graph();
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
+
+      const res = route.path("A", "D", { maxNodes: 2, cost: true });
+      demand(res.path).be.null();
+      res.cost.must.equal(0);
+    });
+  });
+
+  describe("#path() with canVisit", () => {
+    it("can forbid specific edges and still find an alternative path", () => {
+      const route = new Graph();
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
+
+      const res = route.path("A", "D", {
+        cost: true,
+        canVisit: ({ to }) => to !== "C", // prevent going to C
+      });
+
+      res.path.must.eql(["A", "B", "D"]);
+      res.cost.must.equal(5);
+    });
+
+    it("can block all expansions, resulting in no path", () => {
+      const route = new Graph();
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1, C: 2, D: 4 });
+      route.addNode("C", { B: 2, D: 1 });
+      route.addNode("D", { C: 1, B: 4 });
+
+      const res = route.path("A", "D", {
+        cost: true,
+        canVisit: () => false,
+      });
+
+      demand(res.path).be.null();
+      res.cost.must.equal(0);
+    });
+
+    it("receives correct argument shape (from, to, cost, accumulatedCost, depth)", () => {
+      const route = new Graph();
+      route.addNode("A", { B: 1 });
+      route.addNode("B", { A: 1 });
+
+      const spy = sinon.spy(({ from, to, cost, accumulatedCost, depth }) => {
+        // allow everything
+        return true;
+      });
+
+      route.path("A", "B", { canVisit: spy });
+
+      sinon.assert.called(spy);
+      // Check at least one call has the expected shape
+      const found = spy.args.some((args) => {
+        const p = args[0] || {};
+        return (
+          typeof p.from !== "undefined" &&
+          typeof p.to !== "undefined" &&
+          typeof p.cost === "number" &&
+          typeof p.accumulatedCost === "number" &&
+          typeof p.depth === "number"
+        );
+      });
+      demand(found).be.true();
+    });
+
+    it("calculates depth and weight correctly across branches", () => {
+      // Build a small tree so each target node has a unique depth
+      // A (depth: 1, cost: 0)
+      // ├─ B (depth: 2, cost: 1)
+      // │  └─ D (depth: 3, cost: 2)
+      // └─ C (depth: 2, cost: 2)
+      //    └─ E (depth: 3, cost: 5)
+      const route = new Graph();
+      route.addNode("A", { B: 1, C: 2 });
+      route.addNode("B", { D: 1 });
+      route.addNode("C", { E: 3 });
+
+      const spy = sinon.spy(() => true);
+
+      // Use an unreachable goal so the search explores all branches
+      route.path("A", "Z", { canVisit: spy, cost: true });
+
+      // Expected depths for each expanded edge
+      const expected = new Map([
+        ["A->B", { depth: 2, accumulatedCost: 1 }],
+        ["A->C", { depth: 2, accumulatedCost: 2 }],
+        ["B->D", { depth: 3, accumulatedCost: 2 }],
+        ["C->E", { depth: 3, accumulatedCost: 5 }],
+      ]);
+
+      // Check observed depths
+      for (const args of spy.args) {
+        const expectedInfo = expected.get(`${args[0].from}->${args[0].to}`);
+        demand(args[0].depth).to.equal(expectedInfo.depth);
+        demand(args[0].accumulatedCost).to.equal(expectedInfo.accumulatedCost);
+      }
+    });
+  });
 });

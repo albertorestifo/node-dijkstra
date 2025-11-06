@@ -134,9 +134,12 @@ class Graph {
    * @param {string}  goal      - Node we want to reach
    * @param {object}  [options] - Options
    *
-   * @param {boolean} [options.trim]    - Exclude the origin and destination nodes from the result
-   * @param {boolean} [options.reverse] - Return the path in reversed order
-   * @param {boolean} [options.cost]    - Also return the cost of the path when set to true
+   * @param {boolean} [options.trim]      - Exclude the origin and destination nodes from the result
+   * @param {boolean} [options.reverse]   - Return the path in reversed order
+   * @param {boolean} [options.cost]      - Also return the cost of the path when set to true
+   * @param {number}  [options.maxCost]   - Only consider paths with total cost less than or equal to this value
+   * @param {number}  [options.maxNodes]  - Maximum number of nodes allowed in the resulting path (including start and goal)
+   * @param {function} [options.canVisit] - A predicate invoked for each potential edge expansion. Receives an object { from, to, cost, accumulatedCost, depth } and must return true to allow the move
    *
    * @return {array|object} Computed path between the nodes.
    *
@@ -179,6 +182,7 @@ class Graph {
     const explored = new Set();
     const frontier = new Queue();
     const previous = new Map();
+    const depth = new Map();
 
     let path = [];
     let totalCost = 0;
@@ -192,13 +196,31 @@ class Graph {
       throw new Error(`Ending node (${goal}) cannot be avoided`);
     }
 
+    const hasMaxCost =
+      typeof options.maxCost === "number" && !Number.isNaN(options.maxCost);
+    const maxCost = hasMaxCost ? Number(options.maxCost) : undefined;
+    const hasMaxNodes =
+      typeof options.maxNodes === "number" && !Number.isNaN(options.maxNodes);
+    const maxNodes = hasMaxNodes
+      ? Math.max(1, Math.floor(options.maxNodes))
+      : undefined;
+    const canVisit = typeof options.canVisit === "function" ? options.canVisit : null;
+
     // Add the starting point to the frontier, it will be the first node visited
     frontier.set(start, 0);
+    depth.set(start, 1);
 
     // Run until we have visited every node in the frontier
     while (!frontier.isEmpty()) {
       // Get the node in the frontier with the lowest cost (`priority`)
       const node = frontier.next();
+
+      // If the cheapest node already exceeds maxCost, no valid path can be found
+      if (hasMaxCost && node.priority > maxCost) {
+        // ensure path remains empty so we return null later
+        path = [];
+        break;
+      }
 
       // When the node with the lowest cost in the frontier in our goal node,
       // we can compute the path and exit the loop
@@ -224,21 +246,44 @@ class Graph {
         // If we already explored the node, or the node is to be avoided, skip it
         if (explored.has(nNode) || avoid.includes(nNode)) return null;
 
+        const newCost = node.priority + nCost;
+        const currentDepth = depth.get(node.key) || 1;
+        const newDepth = currentDepth + 1;
+
+        // Enforce maximum number of nodes in the resulting path (including start and goal)
+        if (hasMaxNodes && newDepth > maxNodes) return null;
+
+        // Enforce maximum cost constraint
+        if (hasMaxCost && newCost > maxCost) return null;
+
+        // If provided, consult the canVisit to decide whether to expand this edge
+        if (canVisit) {
+          const allowed = canVisit({
+            from: node.key,
+            to: nNode,
+            cost: nCost,
+            accumulatedCost: newCost,
+            depth: newDepth,
+          });
+          if (!allowed) return null;
+        }
+
         // If the neighboring node is not yet in the frontier, we add it with
         // the correct cost
         if (!frontier.has(nNode)) {
           previous.set(nNode, node.key);
-          return frontier.set(nNode, node.priority + nCost);
+          depth.set(nNode, newDepth);
+          return frontier.set(nNode, newCost);
         }
 
         const frontierPriority = frontier.get(nNode).priority;
-        const nodeCost = node.priority + nCost;
 
         // Otherwise we only update the cost of this node in the frontier when
         // it's below what's currently set
-        if (nodeCost < frontierPriority) {
+        if (newCost < frontierPriority) {
           previous.set(nNode, node.key);
-          return frontier.set(nNode, nodeCost);
+          depth.set(nNode, newDepth);
+          return frontier.set(nNode, newCost);
         }
 
         return null;
