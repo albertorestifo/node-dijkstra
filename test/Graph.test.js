@@ -453,19 +453,17 @@ describe("Graph", () => {
       demand(found).be.true();
     });
 
-    it("calculates depth correctly across branches", () => {
+    it("calculates depth and weight correctly across branches", () => {
       // Build a small tree so each target node has a unique depth
-      // A (1)
-      // ├─ B (2)
-      // │  └─ D (3)
-      // └─ C (2)
-      //    └─ E (3)
+      // A (depth: 1, cost: 0)
+      // ├─ B (depth: 2, cost: 1)
+      // │  └─ D (depth: 3, cost: 2)
+      // └─ C (depth: 2, cost: 2)
+      //    └─ E (depth: 3, cost: 5)
       const route = new Graph();
-      route.addNode("A", { B: 1, C: 1 });
-      route.addNode("B", { A: 1, D: 1 });
-      route.addNode("C", { A: 1, E: 1 });
-      route.addNode("D", { B: 1 });
-      route.addNode("E", { C: 1 });
+      route.addNode("A", { B: 1, C: 2 });
+      route.addNode("B", { D: 1 });
+      route.addNode("C", { E: 3 });
 
       const spy = sinon.spy(() => true);
 
@@ -474,16 +472,17 @@ describe("Graph", () => {
 
       // Expected depths for each expanded edge
       const expected = new Map([
-        ["A->B", 2],
-        ["A->C", 2],
-        ["B->D", 3],
-        ["C->E", 3],
+        ["A->B", { depth: 2, accumulatedCost: 1 }],
+        ["A->C", { depth: 2, accumulatedCost: 2 }],
+        ["B->D", { depth: 3, accumulatedCost: 2 }],
+        ["C->E", { depth: 3, accumulatedCost: 5 }],
       ]);
 
       // Check observed depths
       for (const args of spy.args) {
-        const expectedDepth = expected.get(`${args[0].from}->${args[0].to}`);
-        demand(args[0].depth).to.equal(expectedDepth);
+        const expectedInfo = expected.get(`${args[0].from}->${args[0].to}`);
+        demand(args[0].depth).to.equal(expectedInfo.depth);
+        demand(args[0].accumulatedCost).to.equal(expectedInfo.accumulatedCost);
       }
     });
   });
