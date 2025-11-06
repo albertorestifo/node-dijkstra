@@ -393,7 +393,7 @@ describe("Graph", () => {
     });
   });
 
-  describe("#path() with allowedCallback", () => {
+  describe("#path() with canVisit", () => {
     it("can forbid specific edges and still find an alternative path", () => {
       const route = new Graph();
       route.addNode("A", { B: 1 });
@@ -403,7 +403,7 @@ describe("Graph", () => {
 
       const res = route.path("A", "D", {
         cost: true,
-        allowedCallback: ({ to }) => to !== "C", // prevent going to C
+        canVisit: ({ to }) => to !== "C", // prevent going to C
       });
 
       res.path.must.eql(["A", "B", "D"]);
@@ -419,7 +419,7 @@ describe("Graph", () => {
 
       const res = route.path("A", "D", {
         cost: true,
-        allowedCallback: () => false,
+        canVisit: () => false,
       });
 
       demand(res.path).be.null();
@@ -436,7 +436,7 @@ describe("Graph", () => {
         return true;
       });
 
-      route.path("A", "B", { allowedCallback: spy });
+      route.path("A", "B", { canVisit: spy });
 
       sinon.assert.called(spy);
       // Check at least one call has the expected shape

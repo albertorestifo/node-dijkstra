@@ -134,12 +134,12 @@ class Graph {
    * @param {string}  goal      - Node we want to reach
    * @param {object}  [options] - Options
    *
-   * @param {boolean} [options.trim]    - Exclude the origin and destination nodes from the result
-   * @param {boolean} [options.reverse] - Return the path in reversed order
-   * @param {boolean} [options.cost]    - Also return the cost of the path when set to true
-   * @param {number}  [options.maxCost] - Only consider paths with total cost less than or equal to this value
-   * @param {number}  [options.maxNodes]- Maximum number of nodes allowed in the resulting path (including start and goal)
-   * @param {function} [options.allowedCallback] - A predicate invoked for each potential edge expansion. Receives an object { from, to, cost, accumulatedCost, depth } and must return true to allow the move
+   * @param {boolean} [options.trim]      - Exclude the origin and destination nodes from the result
+   * @param {boolean} [options.reverse]   - Return the path in reversed order
+   * @param {boolean} [options.cost]      - Also return the cost of the path when set to true
+   * @param {number}  [options.maxCost]   - Only consider paths with total cost less than or equal to this value
+   * @param {number}  [options.maxNodes]  - Maximum number of nodes allowed in the resulting path (including start and goal)
+   * @param {function} [options.canVisit] - A predicate invoked for each potential edge expansion. Receives an object { from, to, cost, accumulatedCost, depth } and must return true to allow the move
    *
    * @return {array|object} Computed path between the nodes.
    *
@@ -204,9 +204,9 @@ class Graph {
     const maxNodes = hasMaxNodes
       ? Math.max(1, Math.floor(options.maxNodes))
       : undefined;
-    const allowedCallback =
-      typeof options.allowedCallback === "function"
-        ? options.allowedCallback
+    const canVisit =
+      typeof options.canVisit === "function"
+        ? options.canVisit
         : null;
 
     // Add the starting point to the frontier, it will be the first node visited
@@ -259,9 +259,9 @@ class Graph {
         // Enforce maximum cost constraint
         if (hasMaxCost && newCost > maxCost) return null;
 
-        // If provided, consult the allowedCallback to decide whether to expand this edge
-        if (allowedCallback) {
-          const allowed = allowedCallback({
+        // If provided, consult the canVisit to decide whether to expand this edge
+        if (canVisit) {
+          const allowed = canVisit({
             from: node.key,
             to: nNode,
             cost: nCost,
